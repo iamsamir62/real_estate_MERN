@@ -16,10 +16,6 @@ const PriceDropDOwn = () => {
     { value: "any", label: "Any" },
     { value: "low_to_high", label: "Low to High" },
     { value: "high_to_low", label: "High to Low" },
-    { value: "0_1000", label: "$0 - $1,000" },
-    { value: "1000_5000", label: "$1,000 - $5,000" },
-    { value: "5000_10000", label: "$5,000 - $10,000" },
-    { value: "10000_plus", label: "$10,000+" },
   ];
 
   const handlePriceSelect = (priceOption) => {

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { BiBed, BiBath, BiArea } from "react-icons/bi";
 
 const House = ({ house }) => {
@@ -16,7 +16,7 @@ const House = ({ house }) => {
   const [isAvailable, setIsAvailable] = useState(true);
 
   return (
-    <div className="bg-white shadow-1 p-5 rounded-tl-[90px] w-full max-w-[352px] mx-auto cursor-pointer hover:shadow-2xl transition ">
+    <div className="bg-white shadow-1 p-5 rounded-tl-[90px] w-full max-w-[352px] mx-auto cursor-pointer hover:shadow-2xl transition">
       <div className="relative w-full h-[200px] mb-8">
         <img
           src={images}
@@ -37,26 +37,29 @@ const House = ({ house }) => {
       </div>
       <div className="text-lg font-semibold max-w-[260px]">{address}</div>
 
-      <div className="flex gap-x-4 my-4">
-        <div className="flex items-center text-slate-500 gap-1">
-          <div className="text-[20px]">
-            <BiBed />
+      {type === "Flat" && (
+        <div className="flex gap-x-4 my-4">
+          <div className="flex items-center text-slate-500 gap-1">
+            <div className="text-[20px]">
+              <BiBed />
+            </div>
+            <div>{bedrooms}</div>
           </div>
-          <div>{bedrooms}</div>
-        </div>
-        <div className="flex items-center text-slate-500 gap-1">
-          <div className="text-[20px]">
-            <BiBath />
+          <div className="flex items-center text-slate-500 gap-1">
+            <div className="text-[20px]">
+              <BiBath />
+            </div>
+            <div>{bathrooms}</div>
           </div>
-          <div>{bathrooms}</div>
-        </div>
-        <div className="flex items-center text-slate-500 gap-1">
-          <div className="text-[20px]">
-            <BiArea />
+          <div className="flex items-center text-slate-500 gap-1">
+            <div className="text-[20px]">
+              <BiArea />
+            </div>
+            <div>{surface}</div>
           </div>
-          <div>{surface}</div>
         </div>
-      </div>
+      )}
+
       <div className="text-lg font-semibold text-violet-600 mb-4">{price}</div>
     </div>
   );
