@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 const Header = () => {
   return (
     <header className="bg-slate-200 shadow-md ">
-      <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
+      <div className="flex justify-between items-center max-w-[1400px] mx-auto p-3">
         <Link to="/">
-          <h1 className="font-bold text-sm sm:text-xl flex flex-wrap">
+          <h1 className="font-semibold text-sm sm:text-xl flex flex-wrap">
             <span className="text-red-500 font-extrabold">Sam</span>
             <span className="text-slate-700">Estate</span>
           </h1>
@@ -22,17 +22,17 @@ const Header = () => {
         </form>
         <ul className="flex gap-7">
           <Link to="/home">
-            <li className="hidden sm:inline text-slate-700 hover:underline">
+            <li className="hidden sm:inline text-slate-700 hover:underline font-semibold text-xl">
               Home
             </li>
           </Link>
           <Link to="/about">
-            <li className="hidden sm:inline text-slate-700 hover:underline">
+            <li className="hidden sm:inline text-slate-700 hover:underline font-semibold text-xl">
               About
             </li>
           </Link>
           <Link to="/signin">
-            <li className=" sm:inline text-slate-700 hover:underline">
+            <li className=" sm:inline text-slate-700 hover:underline font-semibold text-xl">
               Sign in
             </li>
           </Link>

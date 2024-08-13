@@ -1,3 +1,34 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body{
+  background-color: rgb(241, 245, 241);
+}
+.dropdown{
+  @apply w-[230px] lg:max-w-[2960x] cursor-pointer;
+}
+.dropdown_btn{
+  @apply flex h-[64px] items-center px-[180x] border rounded-lg
+}
+.dropdown-icon-primary{
+  @apply text-2xl mr-[18px] text-violet-700
+}
+.dropdown-icon-secondary{
+  @apply text-2xl text-violet-700 ml-auto;
+}
+.dropdown-menu{
+  @apply px-6 py-8 text-[15px] space-y-6 shadow-md bg-white absolute w-full z-10 list-none rounded-b-lg;
+}
+
+.swiper-container {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 10px;
+}
