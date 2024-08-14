@@ -75,6 +75,7 @@ export const HouseProvider = ({ children }) => {
         price,
         setPrice,
         loading,
+        setLoading,
       }}
     >
       {children}

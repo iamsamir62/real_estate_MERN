@@ -8,6 +8,8 @@ import About from "./pages/About";
 import Profile from "./pages/Profile";
 import Header from "./components/Header";
 import PropertyDetails from "./pages/PropertyDetails";
+import DashBoard from "../src/pages/AdminPages/Dashboard";
+import AddRooms from "../src/pages/AdminPages/AddRooms";
 function App() {
   return (
     <BrowserRouter>
@@ -20,6 +22,10 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/property/:id" element={<PropertyDetails />} />
+        {/*Admin Routes*/}
+
+        <Route path="/admin" element={<DashBoard />} />
+        <Route path="/add-rooms" element={<AddRooms />} />
       </Routes>
     </BrowserRouter>
   );
