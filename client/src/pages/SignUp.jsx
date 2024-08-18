@@ -1,39 +1,46 @@
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
 const SignUp = () => {
   const [location, setLocation] = useState({ latitude: null, longitude: null });
-  const [Data, setData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    file: null,
+  const [isLocationValid, setIsLocationValid] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    trigger,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      file: null,
+      location: "",
+    },
   });
 
   const handleInputChange = (e) => {
     const { id, value, files } = e.target;
-    setData({
-      ...Data,
-      [id]: files ? files[0] : value,
-    });
+    setValue(id, files ? files[0] : value);
   };
 
   const handleGetLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setLocation({
+          const newLocation = {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-          });
-          console.log(
-            "Location captured:",
-            position.coords.latitude,
-            position.coords.longitude
-          );
+          };
+          setLocation(newLocation);
+          setValue("location", JSON.stringify(newLocation));
+          setIsLocationValid(true);
         },
         (error) => {
           console.error("Error getting location: ", error);
+          setIsLocationValid(false);
         }
       );
     } else {
@@ -41,13 +48,19 @@ const SignUp = () => {
     }
   };
 
-  const handleSignUp = (e) => {
-    e.preventDefault();
-    console.log("Form Data:", Data);
+  const onSubmit = async (data) => {
+    const isValid = await trigger("location");
+
+    if (!isValid) {
+      alert("Please get your location before submitting the form.");
+      return;
+    }
+
+    console.log("Form Data:", data);
     console.log("User location:", location);
 
     const userData = {
-      ...Data,
+      ...data,
       location,
     };
 
@@ -59,38 +72,65 @@ const SignUp = () => {
       <h1 className="text-3xl text-center font-semibold my-7">Sign Up</h1>
       <form
         className="rounded-lg flex flex-col items-center gap-4"
-        onSubmit={handleSignUp}
+        onSubmit={handleSubmit(onSubmit)}
       >
-        <input
-          type="text"
-          placeholder="Username"
-          className="border p-3 rounded-lg focus:outline-none w-full"
-          id="username"
-          value={Data.username}
-          onChange={handleInputChange}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          className="border p-3 rounded-lg focus:outline-none w-full"
-          id="email"
-          value={Data.email}
-          onChange={handleInputChange}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="border p-3 rounded-lg focus:outline-none w-full"
-          id="password"
-          value={Data.password}
-          onChange={handleInputChange}
-        />
-        <input
-          type="file"
-          className="border p-3 rounded-lg w-full"
-          id="file"
-          onChange={handleInputChange}
-        />
+        <div className="w-full">
+          <input
+            type="text"
+            placeholder="Username"
+            className={`border p-3 rounded-lg focus:outline-none w-full ${
+              errors.username ? "border-red-500" : ""
+            }`}
+            {...register("username", { required: "Username is required" })}
+          />
+          {errors.username && (
+            <p className="text-red-500">{errors.username.message}</p>
+          )}
+        </div>
+
+        <div className="w-full">
+          <input
+            type="email"
+            placeholder="Email"
+            className={`border p-3 rounded-lg focus:outline-none w-full ${
+              errors.email ? "border-red-500" : ""
+            }`}
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "Invalid email address",
+              },
+            })}
+          />
+          {errors.email && (
+            <p className="text-red-500">{errors.email.message}</p>
+          )}
+        </div>
+
+        <div className="w-full">
+          <input
+            type="password"
+            placeholder="Password"
+            className={`border p-3 rounded-lg focus:outline-none w-full ${
+              errors.password ? "border-red-500" : ""
+            }`}
+            {...register("password", { required: "Password is required" })}
+          />
+          {errors.password && (
+            <p className="text-red-500">{errors.password.message}</p>
+          )}
+        </div>
+
+        <div className="w-full">
+          <input
+            type="file"
+            className="border p-3 rounded-lg w-full"
+            {...register("file")}
+            onChange={handleInputChange}
+          />
+        </div>
+
         <button
           type="button"
           onClick={handleGetLocation}
@@ -98,12 +138,21 @@ const SignUp = () => {
         >
           Get Location
         </button>
-        <button
-          type="submit"
-          className="bg-red-700 text-white p-3 rounded-lg uppercase hover:opacity-95 w-full"
-        >
-          Sign Up
-        </button>
+
+        <div className="w-full">
+          <button
+            type="submit"
+            className="bg-red-700 text-white p-3 rounded-lg uppercase hover:opacity-95 w-full"
+            disabled={!isLocationValid}
+          >
+            Sign Up
+          </button>
+          {!isLocationValid && (
+            <p className="text-red-500 mt-2">
+              Please get your location before submitting the form.
+            </p>
+          )}
+        </div>
       </form>
       <div className="flex gap-2 mt-2">
         <p>Have an account?</p>
