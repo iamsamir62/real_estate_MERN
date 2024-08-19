@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signin = () => {
   const [Data, setData] = useState({
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     setData({
@@ -17,12 +18,39 @@ const Signin = () => {
   const handleSignIn = (e) => {
     e.preventDefault();
     console.log("Form Data:", Data);
+    LoginData(Data);
+  };
 
-    const userData = {
-      ...Data,
-    };
+  const LoginData = async (Data) => {
+    try {
+      const response = await fetch("http://localhost:5000/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(Data),
+      });
 
-    console.log("User Data:", userData);
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Something went wrong");
+      }
+
+      console.log("final", result);
+      const { data } = result;
+      const StoreToLocal = {
+        id: data._id,
+        name: data.name,
+        email: data.email,
+        location: data.location,
+        token: data.token,
+      };
+      localStorage.setItem("user", JSON.stringify(StoreToLocal));
+      navigate("/");
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
