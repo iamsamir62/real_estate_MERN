@@ -22,6 +22,7 @@ const Profile = () => {
 
   const handleSignOutConfirm = () => {
     setIsModalOpen(false);
+    localStorage.clear();
     navigate("/signin");
   };
 

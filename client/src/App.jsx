@@ -14,6 +14,7 @@ import UserLayout from "./Layout/UserLayout.jsx";
 import AdminLayout from "./Layout/AdminLayout.jsx";
 import Users from "./pages/AdminPages/Users.jsx";
 import ViewRooms from "./pages/AdminPages/ViewRooms.jsx";
+import PrivateComponent from "./pages/PrivateComponent.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -51,22 +52,24 @@ function App() {
             </UserLayout>
           }
         />
-        <Route
-          path="/profile"
-          element={
-            <UserLayout>
-              <Profile />
-            </UserLayout>
-          }
-        />
-        <Route
-          path="/property/:id"
-          element={
-            <UserLayout>
-              <PropertyDetails />
-            </UserLayout>
-          }
-        />
+        <Route element={<PrivateComponent />}>
+          <Route
+            path="/profile"
+            element={
+              <UserLayout>
+                <Profile />
+              </UserLayout>
+            }
+          />
+          <Route
+            path="/property/:id"
+            element={
+              <UserLayout>
+                <PropertyDetails />
+              </UserLayout>
+            }
+          />
+        </Route>
 
         {/* Admin Routes */}
         <Route

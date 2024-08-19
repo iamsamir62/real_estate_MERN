@@ -13,7 +13,7 @@ const SignUp = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      username: "",
+      name: "",
       email: "",
       password: "",
       file: null,
@@ -64,7 +64,52 @@ const SignUp = () => {
       location,
     };
 
-    console.log("User Data:", userData);
+    await Data(userData);
+  };
+
+  const Data = async (userData) => {
+    console.log(userData);
+
+    const formData = new FormData();
+    formData.append("name", userData.name);
+    formData.append("email", userData.email);
+
+    if (userData.file) {
+      formData.append("image", userData.file);
+    }
+
+    formData.append("password", userData.password);
+    formData.append("latitude", userData.location.latitude);
+    formData.append("longitude", userData.location.longitude);
+
+    try {
+      const response = await fetch("http://localhost:5000/auth/register", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorResponse = await response.text();
+        console.error("Error response body:", errorResponse);
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+      console.log("Response:", result);
+
+      const { data } = result;
+      const StoreToLocal = {
+        id: data._id,
+        name: data.name,
+        email: data.email,
+        location: data.location,
+        role: data.role,
+      };
+
+      localStorage.setItem("user", JSON.stringify(StoreToLocal));
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -77,15 +122,13 @@ const SignUp = () => {
         <div className="w-full">
           <input
             type="text"
-            placeholder="Username"
+            placeholder="Name"
             className={`border p-3 rounded-lg focus:outline-none w-full ${
-              errors.username ? "border-red-500" : ""
+              errors.name ? "border-red-500" : ""
             }`}
-            {...register("username", { required: "Username is required" })}
+            {...register("name", { required: "Name is required" })}
           />
-          {errors.username && (
-            <p className="text-red-500">{errors.username.message}</p>
-          )}
+          {errors.name && <p className="text-red-500">{errors.name.message}</p>}
         </div>
 
         <div className="w-full">
