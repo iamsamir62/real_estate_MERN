@@ -1,19 +1,33 @@
-import React, { useContext, useState } from "react";
-import HouseContext from "../context/HouseContext";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { BiBed, BiBath, BiArea } from "react-icons/bi";
 
 const PropertyDetails = () => {
-  const { houses } = useContext(HouseContext);
   const { id } = useParams();
+  const [house, setHouse] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const house = houses.find((house) => house.id === parseInt(id));
+  useEffect(() => {
+    const fetchHouse = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/room/${id}`);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setHouse(data.data);
+        setLoading(false);
+      } catch (error) {
+        setError(error.message);
+        setLoading(false);
+      }
+    };
 
-  if (!house) {
-    return <div>Loading...</div>;
-  }
+    fetchHouse();
+  }, [id]);
 
   const handleImageClick = (image) => {
     setSelectedImage(image);
@@ -37,9 +51,20 @@ const PropertyDetails = () => {
     setIsBookingModalOpen(false);
   };
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!house) {
+    return <div>No house found</div>;
+  }
+
   return (
     <div className="container max-w-[1400px] mx-auto p-8 mt-8 shadow-2xl bg-white rounded-lg border border-gray-300 grid grid-cols-1 sm:grid-cols-2 gap-10">
-      {/* Image Grid */}
       <div className="grid sm:grid-cols-2 grid-cols-1 gap-4 mb-8">
         {house.images.map((image, index) => (
           <div
@@ -83,7 +108,7 @@ const PropertyDetails = () => {
       <div>
         <h1 className="text-3xl font-bold text-gray-800 mb-4">Room Details</h1>
         <h2 className="text-2xl font-semibold text-[#A0A0A0] mb-6">
-          {house.desc}
+          {house.description}
         </h2>
         <div className="text-lg leading-8">
           <div className="text-xl font-medium text-gray-700 mb-2">
@@ -120,11 +145,11 @@ const PropertyDetails = () => {
           <div className="text-lg text-gray-600 flex gap-5 items-center">
             <h1 className="text-xl font-serif">Owner name:</h1>
             <div className="text-xl font-mono font-semibold bg-blue-300 rounded-full text-black px-3 py-1">
-              {house.owner}
+              {house.ownerName}
             </div>
           </div>
           <div className="text-xl font-bold bg-red-500 rounded-full px-3 py-1 inline-block text-gray-800 mt-4">
-            {house.price}
+            ${house.price}
           </div>
         </div>
         <div className="mt-8 bg-black text-white inline-block rounded-full px-4 py-3">

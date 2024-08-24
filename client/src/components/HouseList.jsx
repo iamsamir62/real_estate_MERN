@@ -1,10 +1,31 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import House from "./House";
 import HouseContext from "../context/HouseContext";
 
 const HouseList = () => {
-  const { houses, loading } = useContext(HouseContext);
+  const { houses, setHouses, loading, setLoading } = useContext(HouseContext);
+
+  useEffect(() => {
+    const fetchHouses = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch("http://localhost:5000/room");
+        const result = await response.json();
+        if (response.ok && result.data) {
+          setHouses(result.data);
+        } else {
+          console.error("Error:", result.message || "Failed to fetch houses.");
+        }
+      } catch (error) {
+        console.error("Error fetching houses:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHouses();
+  }, [setHouses, setLoading]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -13,10 +34,10 @@ const HouseList = () => {
   return (
     <section className="mb-20">
       <div className="container-lg mx-auto">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 lg:gap-x-0 gap-4 lg:gap-14 ">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 lg:gap-x-0 gap-4 lg:gap-14">
           {houses.length > 0 ? (
             houses.map((house) => (
-              <Link to={`/property/${house.id}`} key={house.id}>
+              <Link to={`/property/${house._id}`} key={house._id}>
                 <House house={house} />
               </Link>
             ))

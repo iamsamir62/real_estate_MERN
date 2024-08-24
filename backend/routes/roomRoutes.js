@@ -4,9 +4,9 @@ const { getNearByRoomsValidation, addRoomValidation, getIndividualRoomDataValida
 const router = express.Router();
 
 
-router.route('/').get( getAllRoomsData);
-router.route('/nearbyrooms').get( getNearByRoomsValidation ,getNearbyRooms);
-router.route('/addroom').post( addRoomValidation ,addRoom);
+router.route('/').get(getAllRoomsData);
+router.route('/nearbyrooms').get(getNearByRoomsValidation, getNearbyRooms);
+router.route('/addroom').post(addRoom);
 router.route('/:roomid').get(getIndividualRoomDataValidation, getIndividualRoomData);
 
 

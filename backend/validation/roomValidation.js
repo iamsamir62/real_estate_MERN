@@ -11,15 +11,7 @@ const getIndividualRoomDataValidationSchema = Joi.object({
 });
 
 
-const addRoomValidationSchema = Joi.object({
-    ownerName: Joi.string().required(),
-    images: Joi.array().items(Joi.string().uri()),
-    address: Joi.string().required(),
-    description: Joi.string().required(),
-    price: Joi.number().required(),
-    latitude: Joi.string().required(),
-    longitude: Joi.string().required(),
-});
+
 
 
 

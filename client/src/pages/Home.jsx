@@ -8,9 +8,6 @@ import { ImSpinner2 } from "react-icons/im";
 import Footer from "../components/Footer";
 
 const Home = () => {
-  const { houses, loading } = useContext(HouseContext);
-  console.log(houses);
-
   return (
     <>
       <Banner />

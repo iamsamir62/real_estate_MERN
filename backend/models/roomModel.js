@@ -9,11 +9,18 @@ const roomSchema = new mongoose.Schema({
     location: {
         latitude: { type: String },
         longitude: { type: String }
-    }
+    },
+    type: {
+        type: String,
+        enum: ['Room', 'Flat'], // Restricts the field to these values
+        required: true
+    },
+    bedrooms: { type: Number, required: true },
+    bathrooms: { type: Number, required: true }
 },
     {
         timestamps: true,
-        collection: 'rooms' 
+        collection: 'rooms'
     });
 
 const Room = mongoose.model("Room", roomSchema);

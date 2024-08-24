@@ -10,7 +10,7 @@ import HouseContext from "../context/HouseContext";
 import "../../src/index.css";
 
 const LocationDropDOwn = () => {
-  const { locations } = useContext(HouseContext);
+  const { locations, setHouses } = useContext(HouseContext);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState("Select Your Place");
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -19,7 +19,7 @@ const LocationDropDOwn = () => {
     setSelectedLocation(
       `${location.address}, ${location.city}, ${location.country}`
     );
-    setIsOpen(false); // Close the dropdown after selecting a location
+    setIsOpen(false);
   };
 
   const handleUseCurrentLocation = () => {
@@ -27,20 +27,51 @@ const LocationDropDOwn = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          // You can use these coordinates to fetch or set the current location details
-          setCurrentLocation({ latitude, longitude }); // Example of setting the current location
-          setSelectedLocation("Current Location"); // Display "Current Location" as selected
-          setIsOpen(false); // Close the dropdown after selecting
+
+          setCurrentLocation({ latitude, longitude });
+          console.log("setCurrentLocation", { latitude, longitude });
+
+          // Fetch nearby rooms based on the current location
+          fetchNearbyRooms(latitude, longitude);
+
+          setSelectedLocation("Current Location");
+          setIsOpen(false);
         },
         (error) => {
           console.error("Error fetching current location:", error);
-          // Handle errors here
         }
       );
     } else {
       console.error("Geolocation is not supported by this browser.");
     }
   };
+
+  const fetchNearbyRooms = async (latitude, longitude) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/room/nearbyrooms?latitude=${latitude}&longitude=${longitude}`
+      );
+      const result = await response.json();
+
+      if (response.ok) {
+        const nearby = result.data;
+        console.log("nearby", nearby);
+
+        setHouses(nearby); // Update this if 'result.data' structure is different
+        console.log("Nearby rooms fetched:", nearby);
+      } else {
+        console.error(
+          "Error fetching nearby rooms:",
+          result.message || "Failed to fetch rooms."
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching nearby rooms:", error);
+    }
+  };
+
+  // Ensure locations is always an array
+  const safeLocations = Array.isArray(locations) ? locations : [];
 
   return (
     <Menu as="div" className="dropdown relative">
@@ -69,8 +100,8 @@ const LocationDropDOwn = () => {
               </button>
             )}
           </Menu.Item>
-          {locations && locations.length > 0 ? (
-            locations.map((location) => (
+          {safeLocations.length > 0 ? (
+            safeLocations.map((location) => (
               <Menu.Item key={location.id}>
                 {({ active }) => (
                   <button

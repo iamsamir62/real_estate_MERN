@@ -1,10 +1,25 @@
 const Room = require('../models/roomModel');
 const asyncHandler = require('express-async-handler');
 const { successResponse } = require('../utils/apiResponse');
+const multer = require('multer');
+const path = require('path');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/'); // Directory to save files
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}${path.extname(file.originalname)}`); // Unique file name
+    },
+});
+const upload = multer({ storage: storage });
+
+// Middleware for handling file uploads and form data
+const uploadRoom = upload.array('photos', 4);
 
 const getAllRoomsData = asyncHandler(async (req, res) => {
     const rooms = await Room.find({});
-    res.status(200).json(successResponse('Data found succeessfully!!',rooms));
+    res.status(200).json(successResponse('Data found succeessfully!!', rooms));
 });
 
 
@@ -41,21 +56,41 @@ const getNearbyRooms = asyncHandler(async (req, res) => {
 });
 
 const addRoom = asyncHandler(async (req, res) => {
-    const { ownerName, description, images, latitude, price, longitude } = req.body;
-
-    const room = new Room({
-        ownerName,
-        description,
-        images,
-        price,
-        location: {
-            latitude,
-            longitude
+    // Middleware to handle files and fields
+    uploadRoom(req, res, async (err) => {
+        if (err) {
+            return res.status(400).json({ message: 'Error uploading files', error: err });
         }
-    });
 
-    const createdRoom = await room.save();
-    res.status(201).json(successResponse('Room added successfully!!', createdRoom));
+
+        const { owner, description, price, latitude, longitude, propertyType, bedrooms, bathrooms } = req.body;
+
+
+        const images = req.files.map(file => file.path);
+
+
+        const room = new Room({
+            owner,
+            description,
+            images,
+            price,
+            location: {
+                latitude,
+                longitude
+            },
+            type: propertyType,
+            bedrooms: propertyType === 'Flat' ? bedrooms : undefined,
+            bathrooms: propertyType === 'Flat' ? bathrooms : undefined
+        });
+
+
+        const createdRoom = await room.save();
+        res.status(201).json({
+            success: true,
+            message: 'Room added successfully!',
+            data: createdRoom
+        });
+    });
 });
 
 const getIndividualRoomData = asyncHandler(async (req, res) => {
@@ -67,7 +102,7 @@ const getIndividualRoomData = asyncHandler(async (req, res) => {
         throw new Error("Room not found");
     }
 
-    res.status(200).json(successResponse('Room found!',room));
+    res.status(200).json(successResponse('Room found!', room));
 });
 
 module.exports = {
