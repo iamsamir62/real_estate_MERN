@@ -29,13 +29,44 @@ const AddRooms = () => {
     }
     setPhotos(files);
   };
+  const onSubmit = async (data) => {
+    const formData = new FormData();
+    formData.append("Owner", data.Owner);
+    formData.append("Address", data.Address);
+    formData.append("propertyType", data.propertyType);
+    formData.append("bedrooms", data.bedrooms);
+    formData.append("bathrooms", data.bathrooms);
+    formData.append("description", data.description);
+    formData.append("price", data.price);
 
-  const onSubmit = (data) => {
-    console.log("Data submitted:", data);
+    photos.forEach((photo, index) => {
+      formData.append("photos", photo);
+    });
+
+    try {
+      const response = await fetch("http://localhost:5000/room/addroom", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorResponse = await response.text();
+        console.error("Error response body:", errorResponse);
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+      console.log("Response:", result);
+
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
-  useEffect(() => {
-    setValue("Address", "Butwal");
-  }, [setValue]);
+
+
+
+
+
 
   return (
     <div className="flex gap-4 h-screen  bg-gray-100">
@@ -92,6 +123,40 @@ const AddRooms = () => {
             />
             {errors.Address && (
               <p className="text-red-500">{errors.Address.message}</p>
+            )}
+          </div>
+          <div className="space-y-2">
+            <label
+              htmlFor="description"
+              className="text-lg font-semibold text-gray-700"
+            >
+              description
+            </label>
+            <input
+              type="text"
+              id="description"
+              {...register("description", { required: "description is required" })}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+            {errors.description && (
+              <p className="text-red-500">{errors.description.message}</p>
+            )}
+          </div>
+          <div className="space-y-2">
+            <label
+              htmlFor="price"
+              className="text-lg font-semibold text-gray-700"
+            >
+              price
+            </label>
+            <input
+              type="number"
+              id="price"
+              {...register("price", { required: "price is required" })}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+            {errors.price && (
+              <p className="text-red-500">{errors.price.message}</p>
             )}
           </div>
           <div className="space-y-2">

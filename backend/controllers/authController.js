@@ -53,6 +53,7 @@ const loginUser = asyncHandler(async (req, res) => {
                 email: user.email,
                 token: token,
                 image: user.image,
+                role:user.role,
             };
             res.status(200).json(successResponse('Logged in successfully!', response));
         } else {

@@ -3,6 +3,7 @@ const asyncHandler = require('express-async-handler');
 const { successResponse } = require('../utils/apiResponse');
 const multer = require('multer');
 const path = require('path');
+const Booking = require('../models/bookingsModel');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -31,7 +32,7 @@ const getNearbyRooms = asyncHandler(async (req, res) => {
         throw new Error("Latitude and longitude are required");
     }
 
-    const radius = 30;
+    const radius = 20;
     const earthRadius = 6371;
 
     const rooms = await Room.find({});
@@ -63,36 +64,65 @@ const addRoom = asyncHandler(async (req, res) => {
         }
 
 
-        const { owner, description, price, latitude, longitude, propertyType, bedrooms, bathrooms } = req.body;
+        const { Owner, photos, description, price, Address, propertyType, bedrooms, bathrooms } = req.body;
+        console.log(req.body)
+
+        const images = photos && photos.map(file => file.path);
 
 
-        const images = req.files.map(file => file.path);
-
-
-        const room = new Room({
-            owner,
-            description,
+        const room = await Room.create({
+            ownerName: Owner,
+            address: Address,
             images,
+
+            description,
             price,
-            location: {
-                latitude,
-                longitude
-            },
             type: propertyType,
             bedrooms: propertyType === 'Flat' ? bedrooms : undefined,
-            bathrooms: propertyType === 'Flat' ? bathrooms : undefined
+            bathrooms: propertyType === 'Flat' ? bathrooms : undefined,
+
         });
+        console.log(room)
 
-
-        const createdRoom = await room.save();
+        // const createdRoom = await room.save();
         res.status(201).json({
             success: true,
             message: 'Room added successfully!',
-            data: createdRoom
+            data: room
         });
     });
 });
+const bookingRoom = asyncHandler(async (req, res) => {
 
+    const { name, phone, address } = req.body;
+
+    const { houseid } = req.params;
+    console.log(houseid)
+    try {
+        const book = await Booking.create({
+            name,
+            phone,
+            address
+        });
+
+        const room = await Room.findOne({ _id: houseid });  // findOne returns a single document or null
+        if (room) {
+            room.status = 'booked';
+            await room.save();  // save the document back to the database
+        } else {
+            console.log('Room not found');
+        }
+
+        res.status(201).json({
+            success: true,
+            message: "booking added successfully!",
+            data: book,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Failed to book", error: error.message });
+    }
+});
 const getIndividualRoomData = asyncHandler(async (req, res) => {
     const { roomid } = req.params;
     const room = await Room.findById(roomid);
@@ -109,5 +139,6 @@ module.exports = {
     getAllRoomsData,
     getNearbyRooms,
     addRoom,
+    bookingRoom,
     getIndividualRoomData
 };

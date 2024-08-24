@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { BiBed, BiBath, BiArea } from "react-icons/bi";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const PropertyDetails = () => {
   const { id } = useParams();
@@ -9,6 +11,12 @@ const PropertyDetails = () => {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [Data, setData] = useState({
+    name: "",
+    phone: "",
+    address: ""
+  });
+
 
   useEffect(() => {
     const fetchHouse = async () => {
@@ -28,6 +36,7 @@ const PropertyDetails = () => {
 
     fetchHouse();
   }, [id]);
+  const booked = house && house.status === 'booked';
 
   const handleImageClick = (image) => {
     setSelectedImage(image);
@@ -36,20 +45,61 @@ const PropertyDetails = () => {
   const closeImageModal = () => {
     setSelectedImage(null);
   };
+  const handleInputChange = (e) => {
+    setData({
+      ...Data,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-  const handleBookNowClick = () => {
+  const handleBookNowClick = async () => {
+
+
     setIsBookingModalOpen(true);
   };
 
   const closeBookingModal = () => {
     setIsBookingModalOpen(false);
   };
+  console.log(house)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted");
-    setIsBookingModalOpen(false);
+
+    try {
+      const response = await fetch(`http://localhost:5000/room/booking/${house._id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(Data),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to  booking.');
+      }
+
+      const result = await response.json();
+      console.log('Booking successful:', result);
+      setIsBookingModalOpen(false);
+      toast('Booking Successful !!', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+
+      setData({});
+    } catch (error) {
+      console.error('Error:', error.message);
+
+    }
   };
+
 
   if (loading) {
     return <div>Loading...</div>;
@@ -72,7 +122,7 @@ const PropertyDetails = () => {
             className="relative w-full h-[300px] rounded-lg overflow-hidden shadow-md"
           >
             <img
-              src={image}
+              src={`http://localhost:5000/${image}`}
               alt={`${house.name} ${index + 1}`}
               className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
               onClick={() => handleImageClick(image)}
@@ -152,9 +202,9 @@ const PropertyDetails = () => {
             ${house.price}
           </div>
         </div>
-        <div className="mt-8 bg-black text-white inline-block rounded-full px-4 py-3">
-          <button className="text-2xl font-mono" onClick={handleBookNowClick}>
-            Book Now
+        <div className="mt-8  bg-black text-white inline-block rounded-full px-4 py-3">
+          <button className={`${booked ? 'cursor-not-allowed' : 'cursor-pointer'} text-xl font-mono`} onClick={handleBookNowClick} disabled={booked}>
+            {booked ? 'Booked' : 'Book Now'}
           </button>
         </div>
       </div>
@@ -172,6 +222,13 @@ const PropertyDetails = () => {
                   type="text"
                   className="w-full p-2 border border-gray-300 rounded-md"
                   required
+                  name="name"
+                  onChange={handleInputChange}
+
+
+
+                  value={Data.name}
+
                 />
               </div>
               <div className="mb-4">
@@ -182,6 +239,11 @@ const PropertyDetails = () => {
                   type="tel"
                   className="w-full p-2 border border-gray-300 rounded-md"
                   required
+                  name="phone"
+                  value={Data.phone}
+                  onChange={handleInputChange}
+
+
                 />
               </div>
               <div className="mb-4">
@@ -192,6 +254,11 @@ const PropertyDetails = () => {
                   type="text"
                   className="w-full p-2 border border-gray-300 rounded-md"
                   required
+                  name="address"
+                  value={Data.address}
+                  onChange={handleInputChange}
+
+
                 />
               </div>
               <div className="flex justify-between">

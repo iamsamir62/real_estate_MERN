@@ -6,6 +6,7 @@ const roomSchema = new mongoose.Schema({
     address: { type: String, required: true },
     description: { type: String, required: true },
     price: { type: Number, required: true },
+
     location: {
         latitude: { type: String },
         longitude: { type: String }
@@ -15,8 +16,16 @@ const roomSchema = new mongoose.Schema({
         enum: ['Room', 'Flat'], // Restricts the field to these values
         required: true
     },
-    bedrooms: { type: Number, required: true },
-    bathrooms: { type: Number, required: true }
+    status: {
+        type: String,
+        enum: ["booked", "available"],
+        default: "available",
+        required: true,
+    },
+
+
+    bedrooms: { type: Number },
+    bathrooms: { type: Number }
 },
     {
         timestamps: true,
