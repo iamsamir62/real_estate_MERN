@@ -5,6 +5,7 @@ import {
   RiArrowUpSLine,
   RiGpsLine,
 } from "react-icons/ri";
+import { FaLaptopHouse } from "react-icons/fa";
 import { Menu } from "@headlessui/react";
 import HouseContext from "../context/HouseContext";
 import "../../src/index.css";
@@ -16,9 +17,9 @@ const LocationDropDOwn = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
 
   const handleLocationSelect = (location) => {
-    setSelectedLocation(
-      `${location.address}, ${location.city}, ${location.country}`
-    );
+    // setSelectedLocation(
+    //   `${location.address}, ${location.city}, ${location.country}`
+    // );
     setIsOpen(false);
   };
 
@@ -45,6 +46,24 @@ const LocationDropDOwn = () => {
       console.error("Geolocation is not supported by this browser.");
     }
   };
+
+  const fetchHouses = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/room");
+      const result = await response.json();
+      if (response.ok && result.data) {
+        setHouses(result.data);
+        setIsOpen(false);
+
+        setSelectedLocation("All Location");
+      } else {
+        console.error("Error:", result.message || "Failed to fetch houses.");
+      }
+    } catch (error) {
+      console.error("Error fetching houses:", error);
+    }
+  };
+
 
   const fetchNearbyRooms = async (latitude, longitude) => {
     try {
@@ -86,7 +105,7 @@ const LocationDropDOwn = () => {
       </Menu.Button>
 
       {isOpen && (
-        <Menu.Items className="dropdown-menu absolute w-full bg-white shadow-lg rounded-md mt-2 z-10">
+        <Menu.Items className="dropdown-menu absolute w-full bg-white shadow-lg rounded-md mt-2 z-19">
           <Menu.Item>
             {({ active }) => (
               <button
@@ -100,7 +119,7 @@ const LocationDropDOwn = () => {
               </button>
             )}
           </Menu.Item>
-          {safeLocations.length > 0 ? (
+          {/* {safeLocations.length > 0 ? (
             safeLocations.map((location) => (
               <Menu.Item key={location.id}>
                 {({ active }) => (
@@ -115,11 +134,25 @@ const LocationDropDOwn = () => {
                 )}
               </Menu.Item>
             ))
-          ) : (
-            <div className="px-4 py-2 text-sm text-gray-700">
-              No locations available
+          ) : ( */}
+            <div className="px-4 py-2 text-sm 
+             text-gray-700"
+            
+                >
+
+
+                <button
+                  className={`${"hover:bg-blue-500 hover:text-white px-2 py-2 text-gray-900"
+                    } group flex rounded-md items-center w-full gap-3 px-2 py-2 text-sm`}
+                  onClick={() => fetchHouses()}
+                >
+
+              < FaLaptopHouse size={18} className="mr-2" />
+
+                  All rooms
+                </button>
             </div>
-          )}
+          {/* )} */}
         </Menu.Items>
       )}
     </Menu>

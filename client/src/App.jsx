@@ -15,6 +15,7 @@ import AdminLayout from "./Layout/AdminLayout.jsx";
 import Users from "./pages/AdminPages/Users.jsx";
 import ViewRooms from "./pages/AdminPages/ViewRooms.jsx";
 import PrivateComponent from "./pages/PrivateComponent.jsx";
+import { ToastContainer } from "react-toastify";
 function App() {
   return (
     <BrowserRouter>
@@ -104,7 +105,9 @@ function App() {
             </AdminLayout>
           }
         />
+
       </Routes>
+        <ToastContainer />
     </BrowserRouter>
   );
 }

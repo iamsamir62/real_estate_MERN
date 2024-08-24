@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Signin = () => {
   const [Data, setData] = useState({
@@ -45,9 +46,25 @@ const Signin = () => {
         email: data.email,
         location: data.location,
         token: data.token,
+        role: data.role,
+
       };
       localStorage.setItem("user", JSON.stringify(StoreToLocal));
       navigate("/");
+      toast('Login Successful !!', {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        style: {
+          backgroundColor: '#4caf50',
+          color: 'white',
+        },
+      });
     } catch (error) {
       console.error("Error:", error);
     }
