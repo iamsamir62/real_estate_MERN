@@ -7,10 +7,10 @@ const Booking = require('../models/bookingsModel');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/'); // Directory to save files
+        cb(null, 'uploads/');
     },
     filename: (req, file, cb) => {
-        cb(null, `${Date.now()}${path.extname(file.originalname)}`); // Unique file name
+        cb(null, `${Date.now()}${path.extname(file.originalname)}`);
     },
 });
 const upload = multer({ storage: storage });
@@ -57,7 +57,6 @@ const getNearbyRooms = asyncHandler(async (req, res) => {
 });
 
 const addRoom = asyncHandler(async (req, res) => {
-    // Middleware to handle files and fields
     uploadRoom(req, res, async (err) => {
         if (err) {
             return res.status(400).json({ message: 'Error uploading files', error: err });
@@ -84,7 +83,6 @@ const addRoom = asyncHandler(async (req, res) => {
         });
         console.log(room)
 
-        // const createdRoom = await room.save();
         res.status(201).json({
             success: true,
             message: 'Room added successfully!',
@@ -105,10 +103,10 @@ const bookingRoom = asyncHandler(async (req, res) => {
             address
         });
 
-        const room = await Room.findOne({ _id: houseid });  // findOne returns a single document or null
+        const room = await Room.findOne({ _id: houseid });  // 
         if (room) {
             room.status = 'booked';
-            await room.save();  // save the document back to the database
+            await room.save();
         } else {
             console.log('Room not found');
         }
@@ -121,6 +119,19 @@ const bookingRoom = asyncHandler(async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Failed to book", error: error.message });
+    }
+});
+const getAllBookedUser = asyncHandler(async (req, res) => {
+    try {
+
+        const users = await Booking.find({});
+
+
+        res.status(200).json(successResponse('Data found successfully!!', users));
+    } catch (error) {
+
+        console.error('Error fetching booked users:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 });
 const getIndividualRoomData = asyncHandler(async (req, res) => {
@@ -140,5 +151,6 @@ module.exports = {
     getNearbyRooms,
     addRoom,
     bookingRoom,
-    getIndividualRoomData
+    getAllBookedUser,
+    getIndividualRoomData,
 };
