@@ -1,17 +1,23 @@
 const User = require("../models/userModel");
+const mongoose = require('mongoose');
 const asyncHandler = require('express-async-handler');
 const { successResponse, failedResponse } = require("../utils/apiResponse");
 
 const registerUser = asyncHandler(async (req, res) => {
-
     const { name, email, password, latitude, longitude } = req.body;
     const image = req.file;
+
+
     const userExists = await User.findOne({ email });
     if (userExists) {
-        res.status(400);
-        throw new Error("User already exist for given email !");
+        return res.status(400).json({
+            success: false,
+            message: "User already exists for given email!"
+        });
     }
+
     try {
+
         const user = await User.create({
             name,
             email,
@@ -22,16 +28,32 @@ const registerUser = asyncHandler(async (req, res) => {
                 longitude
             }
         });
+
+
         if (user) {
-            res.status(201).json(successResponse('User created Successfully !', user));
+            return res.status(201).json({
+                success: true,
+                message: 'User created successfully!',
+                data: user
+            });
         } else {
-            res.status(400).json(failedResponse('Error while creating the user'));
+
+            return res.status(400).json({
+                success: false,
+                message: 'Error while creating the user'
+            });
         }
 
     } catch (err) {
-        throw new Error('Internal server error while creating the User');
+
+        console.error('Error creating user:', err);
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error while creating the user'
+        });
     }
 });
+
 
 const loginUser = asyncHandler(async (req, res) => {
     try {
@@ -53,7 +75,7 @@ const loginUser = asyncHandler(async (req, res) => {
                 email: user.email,
                 token: token,
                 image: user.image,
-                role:user.role,
+                role: user.role,
             };
             res.status(200).json(successResponse('Logged in successfully!', response));
         } else {
@@ -65,6 +87,27 @@ const loginUser = asyncHandler(async (req, res) => {
     }
 });
 
+const getAllUserData = asyncHandler(async (req, res) => {
+    const users = await User.find({});
+    res.status(200).json(successResponse('Data found succeessfully!!', users));
+});
+
+const deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ success: false, message: 'Invalid user ID' });
+        }
+        const user = await User.findByIdAndDelete(id);
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+        res.status(200).json({ success: true, message: 'User deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).json({ success: false, message: 'Failed to delete user', error: error.message });
+    }
+};
 
 
 
@@ -72,4 +115,4 @@ const loginUser = asyncHandler(async (req, res) => {
 
 
 
-module.exports = { registerUser, loginUser }
+module.exports = { registerUser, loginUser, getAllUserData, deleteUser }

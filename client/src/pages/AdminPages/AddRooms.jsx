@@ -57,16 +57,10 @@ const AddRooms = () => {
 
       const result = await response.json();
       console.log("Response:", result);
-
     } catch (error) {
       console.error("Error:", error);
     }
   };
-
-
-
-
-
 
   return (
     <div className="flex gap-4 h-screen  bg-gray-100">
@@ -135,7 +129,9 @@ const AddRooms = () => {
             <input
               type="text"
               id="description"
-              {...register("description", { required: "description is required" })}
+              {...register("description", {
+                required: "description is required",
+              })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
             {errors.description && (

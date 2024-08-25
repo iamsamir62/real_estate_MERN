@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const SignUp = () => {
   const [location, setLocation] = useState({ latitude: null, longitude: null });
@@ -20,42 +21,13 @@ const SignUp = () => {
       location: "",
     },
   });
-
+  const navigate = useNavigate();
   const handleInputChange = (e) => {
     const { id, value, files } = e.target;
     setValue(id, files ? files[0] : value);
   };
 
-  const handleGetLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const newLocation = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          };
-          setLocation(newLocation);
-          setValue("location", JSON.stringify(newLocation));
-          setIsLocationValid(true);
-        },
-        (error) => {
-          console.error("Error getting location: ", error);
-          setIsLocationValid(false);
-        }
-      );
-    } else {
-      console.error("Geolocation is not supported by this browser.");
-    }
-  };
-
   const onSubmit = async (data) => {
-    const isValid = await trigger("location");
-
-    if (!isValid) {
-      alert("Please get your location before submitting the form.");
-      return;
-    }
-
     console.log("Form Data:", data);
     console.log("User location:", location);
 
@@ -88,13 +60,24 @@ const SignUp = () => {
         body: formData,
       });
 
+      const result = await response.json();
+
       if (!response.ok) {
-        const errorResponse = await response.text();
-        console.error("Error response body:", errorResponse);
-        throw new Error("Network response was not ok");
+        const errorMessage = result.message || "An unexpected error occurred";
+        console.error("Error response body:", result);
+        toast.error(`Error: ${errorMessage}`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+        return;
       }
 
-      const result = await response.json();
       console.log("Response:", result);
 
       const { data } = result;
@@ -105,10 +88,35 @@ const SignUp = () => {
         location: data.location,
         role: data.role,
       };
+      toast.success("Signup Successful !!", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        style: {
+          backgroundColor: "#4caf50",
+          color: "white",
+        },
+      });
 
       localStorage.setItem("user", JSON.stringify(StoreToLocal));
+      navigate("/signin");
     } catch (error) {
       console.error("Error:", error);
+      toast.error("An unexpected error occurred. Please try again.", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
     }
   };
 
@@ -174,27 +182,13 @@ const SignUp = () => {
           />
         </div>
 
-        <button
-          type="button"
-          onClick={handleGetLocation}
-          className="bg-blue-500 text-white p-3 rounded-lg uppercase hover:opacity-95 w-full"
-        >
-          Get Location
-        </button>
-
         <div className="w-full">
           <button
             type="submit"
             className="bg-red-700 text-white p-3 rounded-lg uppercase hover:opacity-95 w-full"
-            disabled={!isLocationValid}
           >
             Sign Up
           </button>
-          {!isLocationValid && (
-            <p className="text-red-500 mt-2">
-              Please get your location before submitting the form.
-            </p>
-          )}
         </div>
       </form>
       <div className="flex gap-2 mt-2">

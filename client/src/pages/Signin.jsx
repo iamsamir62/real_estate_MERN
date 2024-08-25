@@ -35,6 +35,17 @@ const Signin = () => {
       const result = await response.json();
 
       if (!response.ok) {
+        // Display error toast if login fails
+        toast.error(result.message || "Something went wrong", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
         throw new Error(result.message || "Something went wrong");
       }
 
@@ -47,11 +58,11 @@ const Signin = () => {
         location: data.location,
         token: data.token,
         role: data.role,
-
       };
       localStorage.setItem("user", JSON.stringify(StoreToLocal));
       navigate("/");
-      toast('Login Successful !!', {
+      // Display success toast
+      toast.success("Login Successful !!", {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
@@ -61,13 +72,11 @@ const Signin = () => {
         progress: undefined,
         theme: "light",
         style: {
-          backgroundColor: '#4caf50',
-          color: 'white',
+          backgroundColor: "#4caf50",
+          color: "white",
         },
       });
-    } catch (error) {
-      console.error("Error:", error);
-    }
+    } catch (error) {}
   };
 
   return (
