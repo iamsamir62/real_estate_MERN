@@ -35,7 +35,7 @@ const ViewRooms = () => {
   const handleDelete = async (id) => {
     console.log("Delete house with id:", id);
     try {
-      const response = await fetch(`http://localhost:5000/room/${id}`, {
+      const response = await fetch(`http://localhost:5000/room/deleteroom/${id}`, {
         method: "DELETE",
       });
 
@@ -110,12 +110,7 @@ const ViewRooms = () => {
 
                   <td className="border border-gray-400 p-2">
                     <div className="flex">
-                      <button
-                        onClick={() => handleEdit(house)}
-                        className="text-blue-500 hover:underline ml-10"
-                      >
-                        Edit
-                      </button>
+                    
                       <button
                         onClick={() => handleDelete(house._id)}
                         className="text-red-500 hover:underline ml-10"

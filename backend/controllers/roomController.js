@@ -5,18 +5,21 @@ const multer = require('multer');
 const path = require('path');
 const Booking = require('../models/bookingsModel');
 
+
+// Define storage for multer
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads/');
     },
     filename: (req, file, cb) => {
-        cb(null, `${Date.now()}${path.extname(file.originalname)}`);
-    },
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
 });
-const upload = multer({ storage: storage });
 
-// Middleware for handling file uploads and form data
-const uploadRoom = upload.array('photos', 4);
+// File upload middleware
+const uploadRoom = multer({
+    storage: storage,
+}).array('photos', 10);
 
 const getAllRoomsData = asyncHandler(async (req, res) => {
     const rooms = await Room.find({});
@@ -56,33 +59,32 @@ const getNearbyRooms = asyncHandler(async (req, res) => {
     res.status(200).json(successResponse("Rooms found!!", nearbyRooms));
 });
 
+
+
 const addRoom = asyncHandler(async (req, res) => {
     uploadRoom(req, res, async (err) => {
         if (err) {
             return res.status(400).json({ message: 'Error uploading files', error: err });
         }
 
+        const { Owner, description, price, Address, propertyType, bedrooms, bathrooms } = req.body;
+        const photos = req.files; // Access uploaded photos
 
-        const { Owner, photos, description, price, Address, propertyType, bedrooms, bathrooms } = req.body;
-        console.log(req.body)
-
-        const images = photos && photos.map(file => file.path);
-
+        // Make sure you handle this part correctly:
+        const images = photos && photos.map(file => file.path); // Save paths to DB
+       console.log(images)
 
         const room = await Room.create({
             ownerName: Owner,
             address: Address,
-            images,
-
+            images, // Save the paths of the uploaded files
             description,
             price,
             type: propertyType,
             bedrooms: propertyType === 'Flat' ? bedrooms : undefined,
             bathrooms: propertyType === 'Flat' ? bathrooms : undefined,
-
         });
-        console.log(room)
-
+console.log(room)
         res.status(201).json({
             success: true,
             message: 'Room added successfully!',
@@ -90,30 +92,39 @@ const addRoom = asyncHandler(async (req, res) => {
         });
     });
 });
+
+
+
+
 const bookingRoom = asyncHandler(async (req, res) => {
-
+    
     const { name, phone, address } = req.body;
-
+    console.log(req.body)
     const { houseid } = req.params;
-    console.log(houseid)
+
+    if (!houseid) {
+        return res.status(400).json({ message: "House ID is required" });
+    }
+
     try {
         const book = await Booking.create({
             name,
             phone,
+            roomId: houseid,
             address
         });
 
-        const room = await Room.findOne({ _id: houseid });  // 
-        if (room) {
-            room.status = 'booked';
-            await room.save();
-        } else {
-            console.log('Room not found');
+        const room = await Room.findOne({ _id: houseid });
+        if (!room) {
+            return res.status(404).json({ message: "Room not found" });
         }
+
+        room.status = 'booked';
+        await room.save();
 
         res.status(201).json({
             success: true,
-            message: "booking added successfully!",
+            message: "Booking added successfully!",
             data: book,
         });
     } catch (error) {
@@ -121,10 +132,11 @@ const bookingRoom = asyncHandler(async (req, res) => {
         res.status(500).json({ message: "Failed to book", error: error.message });
     }
 });
+
 const getAllBookedUser = asyncHandler(async (req, res) => {
     try {
 
-        const users = await Booking.find({});
+        const users = await Booking.find({}).populate("roomId");
 
 
         res.status(200).json(successResponse('Data found successfully!!', users));
@@ -146,6 +158,54 @@ const getIndividualRoomData = asyncHandler(async (req, res) => {
     res.status(200).json(successResponse('Room found!', room));
 });
 
+const deleteBooking = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const bookedRoom = await Booking.findById(id); 
+        const booking = await Booking.findByIdAndDelete(id); 
+
+        if (!booking) {
+            return res.status(404).json({ success: false, message: 'Booking not found' });
+        }
+
+        const room = await Room.findOne({ _id: bookedRoom.roomId });
+        console.log(room)
+        if (!room) {
+            return res.status(404).json({ message: "Room not found" });
+        }
+
+        room.status = 'available';
+        await room.save();
+
+        res.status(200).json({ success: true, message: 'Booking deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Failed to delete booking', error: error.message });
+    }
+};
+
+
+
+
+const deleteRoom = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const room = await Room.findByIdAndDelete(id); 
+
+        if (!room) {
+            return res.status(404).json({ success: false, message: 'Room not found' });
+        }
+
+        
+
+        res.status(200).json({ success: true, message: 'Room deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Failed to delete Room', error: error.message });
+    }
+};
+
+
 module.exports = {
     getAllRoomsData,
     getNearbyRooms,
@@ -153,4 +213,6 @@ module.exports = {
     bookingRoom,
     getAllBookedUser,
     getIndividualRoomData,
+    deleteBooking,
+    deleteRoom
 };

@@ -27,7 +27,9 @@ const SideBar = () => {
       <div className="space-y-3">
         <div className="flex items-center justify-between ">
           <h2 className={`text-2xl ml-7  font-bold ${!isOpen && "hidden"}`}>
-            Sam<span className="text-red-500">Estate</span>
+            <Link to={'/'}>
+            Real<span className="text-red-500">Estate</span>
+            </Link>
           </h2>
 
           <button
