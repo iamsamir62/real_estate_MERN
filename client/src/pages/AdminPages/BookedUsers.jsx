@@ -1,5 +1,8 @@
 import React, { useContext, useEffect } from "react";
 import HouseContext from "../../context/HouseContext";
+import {
+  Link
+} from "react-router-dom";
 
 const BookedUsers = () => {
   const { bookingUser, setBookingUser, loading, setLoading } =
@@ -26,9 +29,9 @@ const BookedUsers = () => {
     fetchBookedUsers();
   }, [setBookingUser, setLoading]);
 
-  const handleEdit = (booking) => {
-    console.log("Edit booking:", booking);
-  };
+  // const handleEdit = (booking) => {
+  //   console.log("Edit booking:", booking);
+  // };
 
   const handleDelete = async (id) => {
     console.log("Delete booking with id:", id);
@@ -53,6 +56,8 @@ const BookedUsers = () => {
     }
   };
 
+ 
+
   return (
     <div className="flex h-screen overflow-hidden">
       <div className="flex flex-col w-full p-6 bg-gray-100 overflow-auto">
@@ -68,53 +73,68 @@ const BookedUsers = () => {
                 <th className="border border-gray-400 p-2">No.</th>
                 <th className="border border-gray-400 p-2">Name</th>
                 <th className="border border-gray-400 p-2">Phone</th>
-                <th className="border border-gray-400 p-2">Address</th>
+                  <th className="border border-gray-400 p-2">Address</th>
+                  <th className="border border-gray-400 p-2">Room</th>
+                  <th className="border border-gray-400 p-2">OwnerName</th>
+                  <th className="border border-gray-400 p-2">Room's Address</th>
                 <th className="border border-gray-400 p-2">Action</th>
               </tr>
             </thead>
-            <tbody>
-              {bookingUser.length > 0 ? (
-                bookingUser.map((booking, index) => (
-                  <tr key={booking._id}>
-                    <td className="border border-gray-400 p-2">{index + 1}</td>
-                    <td className="border border-gray-400 p-2">
-                      {booking.name}
-                    </td>
-                    <td className="border border-gray-400 p-2">
-                      {booking.phone}
-                    </td>
-                    <td className="border border-gray-400 p-2">
-                      {booking.address || "N/A"}
-                    </td>
-                    <td className="border border-gray-400 p-2">
-                      <div className="flex gap-4">
-                        <button
-                          onClick={() => handleEdit(booking)}
-                          className="text-blue-500 hover:underline"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(booking._id)}
-                          className="text-red-500 hover:underline"
-                        >
-                          Delete
-                        </button>
-                      </div>
+              <tbody>
+                {bookingUser.length > 0 ? (
+                  bookingUser.map((booking, index) => (
+                    <tr key={booking._id}>
+                      <td className="border border-gray-400 p-2">{index + 1}</td>
+                      <td className="border border-gray-400 p-2">{booking.name}</td>
+                      <td className="border border-gray-400 p-2">{booking.phone}</td>
+                      <td className="border border-gray-400 p-2">{booking.address || "N/A"}</td>
+
+                      <td className="border border-gray-400 p-2 underline cursor-pointer">
+                        {booking.roomId ? (
+                          <Link to={`/property/${booking.roomId._id}`}>
+                            {booking.roomId._id}
+                          </Link>
+                        ) : (
+                          "N/A"
+                        )}
+                      </td>
+
+                      <td className="border border-gray-400 p-2">
+                        {booking.roomId ? booking.roomId.ownerName : "N/A"}
+                      </td>
+
+                      <td className="border border-gray-400 p-2">
+                        {booking.roomId ? booking.roomId.address : "N/A"}
+                      </td>
+
+                      <td className="border border-gray-400 p-2">
+                        <div className="flex gap-4">
+                          {/* <button
+                            onClick={() => handleEdit(booking)}
+                            className="text-blue-500 hover:underline"
+                          >
+                            Edit
+                          </button> */}
+                          <button
+                            onClick={() => handleDelete(booking._id)}
+                            className="text-red-500 hover:underline"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="8" className="border border-gray-400 p-2 text-center">
+                      No bookings found
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td
-                    colSpan="5"
-                    className="border border-gray-400 p-2 text-center"
-                  >
-                    No bookings found
-                  </td>
-                </tr>
-              )}
-            </tbody>
+                )}
+              </tbody>
+
+
           </table>
         )}
       </div>

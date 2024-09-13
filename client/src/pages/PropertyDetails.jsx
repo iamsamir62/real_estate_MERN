@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { BiBed, BiBath, BiArea } from "react-icons/bi";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Audio, Blocks } from 'react-loader-spinner'
 
 const PropertyDetails = () => {
   const { id } = useParams();
@@ -35,7 +36,7 @@ const PropertyDetails = () => {
     };
 
     fetchHouse();
-  }, [id]);
+  }, [id, isBookingModalOpen]);
   const booked = house && house.status === 'booked';
 
   const handleImageClick = (image) => {
@@ -102,7 +103,18 @@ const PropertyDetails = () => {
 
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="
+    flex justify-center items-center
+     h-screen w-screen
+    "><Blocks
+        height="80"
+        width="80"
+        color="#4fa94d"
+        ariaLabel="blocks-loading"
+        wrapperStyle={{}}
+        wrapperClass="blocks-wrapper"
+        visible={true}
+      /></div>;
   }
 
   if (error) {
@@ -280,6 +292,7 @@ const PropertyDetails = () => {
           </div>
         </div>
       )}
+
     </div>
   );
 };

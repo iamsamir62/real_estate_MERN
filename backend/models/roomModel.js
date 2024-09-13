@@ -16,12 +16,7 @@ const roomSchema = new mongoose.Schema({
         enum: ['Room', 'Flat'], // Restricts the field to these values
         required: true
     },
-    status: {
-        type: String,
-        enum: ["booked", "available"],
-        default: "available",
-        required: true,
-    },
+    status: { type: String, default: 'available' },
 
 
     bedrooms: { type: Number },

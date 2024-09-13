@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import SideBar from "../../components/Admin/SideBar";
+import { toast } from "react-toastify";
 
 const AddRooms = () => {
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     setValue,
     formState: { errors },
   } = useForm({
@@ -56,6 +58,23 @@ const AddRooms = () => {
       }
 
       const result = await response.json();
+      if (result) {
+        toast('Room added Successfully !!', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
+        
+        reset(); 
+        setPhotos([]); 
+      }
+
       console.log("Response:", result);
     } catch (error) {
       console.error("Error:", error);

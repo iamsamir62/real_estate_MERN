@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import SideBar from "../../components/Admin/SideBar";
 import { FaUser } from "react-icons/fa";
 import HouseContext from "../../context/HouseContext";
-import BookedUsers from "./bookedusers";
+import BookedUsers from "./BookedUsers";
 
 const Dashboard = () => {
   const [totalUsers, setTotalUsers] = useState(0);
