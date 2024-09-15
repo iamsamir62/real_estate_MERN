@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { BiBed, BiBath, BiArea } from "react-icons/bi";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -18,6 +18,11 @@ const PropertyDetails = () => {
     address: ""
   });
 
+
+  const location = useLocation();
+  useEffect(() => {
+    window.scrollTo({top: 0, left: 0, behavior: 'smooth' });
+  }, [location]);
 
   useEffect(() => {
     const fetchHouse = async () => {
@@ -126,7 +131,12 @@ const PropertyDetails = () => {
   }
 
   return (
-    <div className="container max-w-[1400px] mx-auto p-8 mt-8 shadow-2xl bg-white rounded-lg border border-gray-300 grid grid-cols-1 sm:grid-cols-2 gap-10">
+    <div className="bg-white flex flex-col gap-20">
+      {console.log(house,"dsdd")}
+      <div className="h-96 bg-red-500">
+<img src={`https://images.unsplash.com/photo-1559841644-08984562005a?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`} className="h-full w-full object-cover object-bottom" />
+      </div>
+      <div className="  w-11/12 mx-auto bg-white rounded-lg   grid grid-cols-1 sm:grid-cols-2 gap-10">
       <div className="grid sm:grid-cols-2 grid-cols-1 gap-4 mb-8">
         {house.images.map((image, index) => (
           <div
@@ -293,6 +303,7 @@ const PropertyDetails = () => {
         </div>
       )}
 
+    </div>
     </div>
   );
 };
