@@ -7,13 +7,10 @@ const Banner = () => {
       <div className="flex flex-col lg:flex-row">
         <div className="lg:ml-8 xl:ml-[135px] flex flex-col items-center lg:items-start text-center lg:text-left justify-center flex-1 px-4 lg:px-0">
           <h1 className="text-4xl lg:text-[50px] font-semibold leanding-none mb-6">
-            <span>Rent</span> Your Dream House With Us.
+            <span>Rent</span> Your Perfect Home Today
           </h1>
           <p className="max-w-[480px] mb-8">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae
-            ea a temporibus sint similique exercitationem totam voluptas,
-            possimus aliquid esse doloremque excepturi laboriosam ad cumque
-            assumenda hic incidunt. Sapiente, tempore.
+          Find your ideal room or flat in prime locations with just a few clicks. Our platform offers a variety of rental options tailored to your needs and budget. Start your journey to comfortable living with us. Explore, compare, and choose your next home with ease.
           </p>
         </div>
         <div className="hidden flex-1 lg:flex justify-end items-endrelative w-full mt-5 max-w-xl mx-auto">

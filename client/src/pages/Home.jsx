@@ -6,13 +6,15 @@ import HouseContext from "../context/HouseContext";
 import House from "../components/House";
 import { ImSpinner2 } from "react-icons/im";
 import Footer from "../components/Footer";
+import Footermain from "../components/Footermain";
+import About from "./About";
 
 const Home = () => {
   return (
     <>
       <Banner />
       <HouseList />
-      <Footer />
+      <About/>
     </>
   );
 };

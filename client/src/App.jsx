@@ -16,6 +16,7 @@ import Users from "./pages/AdminPages/Users.jsx";
 import ViewRooms from "./pages/AdminPages/ViewRooms.jsx";
 import PrivateComponent from "./pages/PrivateComponent.jsx";
 import { ToastContainer } from "react-toastify";
+import Contact from "./pages/Contact.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -52,6 +53,16 @@ function App() {
               <About />
             </UserLayout>
           }
+          
+        />
+          <Route
+          path="/contact"
+          element={
+            <UserLayout>
+              <Contact />
+            </UserLayout>
+          }
+          
         />
         <Route element={<PrivateComponent />}>
           <Route
