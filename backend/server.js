@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
 })
 app.use(express.json());
 app.use(cors({
-    origin: 'http://localhost:5173'
+    origin: ['http://localhost:5173',"http://localhost:5174"]
 }));
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
