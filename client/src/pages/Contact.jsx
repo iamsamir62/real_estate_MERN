@@ -2,7 +2,7 @@ import React from "react";
 
 const Contact = () => {
   return (
-    <div>
+    <div className="py-40">
       <div className="mt-10 grid grid-cols-2 w-11/12 mx-auto gap-10 items-center justify-center">
         <div className="border border-white p-10 bg-white">
           <div>
@@ -64,6 +64,7 @@ const Contact = () => {
       </div>
     </div>
   );
+  
 };
 
 export default Contact;

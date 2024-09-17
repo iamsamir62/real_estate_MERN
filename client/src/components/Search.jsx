@@ -9,9 +9,17 @@ const Search = () => {
   };
 
   return (
-    <div className="px-[30px] py-4 max-w-[800px] mx-auto mt-4 flex flex-col lg:flex-row justify-between gap-4 relative shadow-lg bg-gray-100 rounded-lg border lg:items-center">
+    <div className="px-4 py-4   w-10/12 
+     mx-auto mt-4 grid grid-cols-5  justify-between
+      gap-4 relative shadow-lg bg-gray-100 rounded-lg border lg:items-center">
+        <div className="w-full col-span-2 ">
       <LocationDropDOwn />
+
+        </div>
+        <div className="w-full col-span-2 ">
+
       <PriceDropDown />
+        </div>
 
       <button
         onClick={handleClick}
