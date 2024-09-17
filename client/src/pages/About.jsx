@@ -58,8 +58,8 @@ const About = () => {
  
   ];
   return (
-    <div>
-      <div className="grid grid-cols-2 gap-10 w-11/12 mx-auto py-24">
+    <div className="py-32 ">
+      <div className="grid grid-cols-2 gap-10 w-11/12 mx-auto ">
         <div className="flex flex-col gap-9 ">
         <div className="flex flex-col gap-2">
         <h2 className="font-semibold text-customgreen text-2xl text-red-500 ">

@@ -1,11 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [ShowTime, setShowTime] = useState(false);
+
+  useEffect(() => {
+    window.addEventListener('scroll',function(){
+if(this.pageYOffset>300){
+  setShowTime(true)
+}else{
+  setShowTime(false)
+}
+    })
+  
+    return () => {
+      window.removeEventListener('scroll',function(){
+        if(this.pageYOffset>100){
+          setShowTime(true)
+        }else{
+          setShowTime(false)
+        }
+      })
+    }
+  }, [ShowTime])
+  
+
   return (
-    <header className="bg-slate-200 shadow-md py-5 ">
+    <header className={` bg-white ${ShowTime?"bg-opacity-100 -translate-y-3 scale-105":"bg-opacity-40 "}  transition-all ease-in-out duration-300 delay-75 fixed z-50 w-full shadow-md py-5 `}>
       <div className="flex justify-between items-center w-10/12 mx-auto">
         <Link to="/">
           <h1 className="font-semibold text-sm sm:text-xl flex flex-wrap">

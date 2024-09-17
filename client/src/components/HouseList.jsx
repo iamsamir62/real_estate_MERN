@@ -38,7 +38,7 @@ const HouseList = () => {
   return (
     <section className="mb-20 w-11/12 mx-auto">
       <div className="container-lg mx-auto">
-        <div className="grid  md:grid-cols-2 md:gap-4 lg:grid-cols-4 lg:gap-x-0 gap-4 lg:gap-14">
+        <div className="grid  md:grid-cols-2 md:gap-4 lg:grid-cols-4  gap-4 lg:gap-5">
           {houses.length > 0 ? (
             houses.map((house) => (
               <Link to={`/property/${house._id}`} key={house._id}>
