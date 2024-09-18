@@ -67,17 +67,20 @@ const addRoom = asyncHandler(async (req, res) => {
             return res.status(400).json({ message: 'Error uploading files', error: err });
         }
 
-        const { Owner, description, price, Address, propertyType, bedrooms, bathrooms } = req.body;
-        const photos = req.files; // Access uploaded photos
+        const { Owner, description, price, Address, propertyType, bedrooms, latitude, longitude, bathrooms } = req.body;
+        const photos = req.files; 
 
-        // Make sure you handle this part correctly:
-        const images = photos && photos.map(file => file.path); // Save paths to DB
+        const images = photos && photos.map(file => file.path); 
        console.log(images)
 
         const room = await Room.create({
             ownerName: Owner,
             address: Address,
-            images, // Save the paths of the uploaded files
+            location: {
+                latitude: latitude,
+                longitude: longitude
+            },
+            images, 
             description,
             price,
             type: propertyType,

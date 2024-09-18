@@ -39,6 +39,9 @@ const AddRooms = () => {
     formData.append("bedrooms", data.bedrooms);
     formData.append("bathrooms", data.bathrooms);
     formData.append("description", data.description);
+    formData.append("phone", data.phone);
+    formData.append("latitude", data.latitude);
+    formData.append("longitude", data.longitude);
     formData.append("price", data.price);
 
     photos.forEach((photo, index) => {
@@ -189,6 +192,42 @@ const AddRooms = () => {
             />
             {errors.Owner && (
               <p className="text-red-500">{errors.Owner.message}</p>
+            )}
+          </div>
+          <div className="space-y-2">
+            <label
+              htmlFor="Latitude"
+              className="text-lg font-semibold text-gray-700"
+            >
+              Latitude
+            </label>
+            <input
+              type="number"
+              step="0.01" 
+              id="latitude"
+              {...register("latitude", { required: "Latitude is required" })}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+            {errors.latitude && (
+              <p className="text-red-500">{errors.latitude.message}</p>
+            )}
+          </div>
+          <div className="space-y-2">
+            <label
+              htmlFor="Longitude"
+              className="text-lg font-semibold text-gray-700"
+            >
+              Longitude
+            </label>
+            <input
+              type="number"
+              step="0.01" 
+              id="longitude"
+              {...register("longitude", { required: "Longitude is required" })}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+            {errors.longitude && (
+              <p className="text-red-500">{errors.longitude.message}</p>
             )}
           </div>
           <div className="space-y-2">
