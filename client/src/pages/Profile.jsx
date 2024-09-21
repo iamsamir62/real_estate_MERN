@@ -1,12 +1,35 @@
-import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [bookings, setBookings] = useState(null);
   const fileRef = useRef(null);
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
+
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/room/getindividualbookings/${user.id}`
+        );
+        const result = await response.json();
+        if (response.ok && result.data) {
+          setBookings(result.data);
+        } else {
+          console.error(
+            "Error:",
+            result.message || "Failed to fetch bookings."
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching bookings:", error);
+      }
+    };
+    fetchBookings();
+  }, [user.id]);
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -32,56 +55,94 @@ const Profile = () => {
   };
 
   return (
-    <div className="p-3 max-w-lg mx-auto">
+    <div className="p-3 max-w-3xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
-      <form className="flex flex-col">
-        <input
-          type="file"
-          ref={fileRef}
-          hidden
-          accept="image/*"
-          onChange={handleImageChange}
-        />
 
-        <img
-          onClick={() => fileRef.current.click()}
-          src={
-            selectedImage ||
-            "https://wallpapers.com/images/featured-full/cool-profile-picture-87h46gcobjl5e4xu.jpg"
-          }
-          alt="profile"
-          className="rounded-full h-24 w-24 object-cover cursor-pointer self-center"
-        />
-       Name <h2>{user.name}</h2>
-       Role <h2>{user.role}</h2>
-        <input
-          type="text"
-          placeholder="Fullname"
-          className="border p-3 mt-5 rounded-lg focus:outline-none"
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          className="border p-3 mt-5 rounded-lg focus:outline-none"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="border p-3 mt-5 rounded-lg focus:outline-none"
-        />
-        <div className="flex justify-between">
-          <button className="bg-slate-700 mt-5 w-24 rounded-lg p-3 uppercase text-white font-semibold hover:opacity-95 disabled:opacity-80">
-            Update
-          </button>
-          <button
-            className="bg-red-700 mt-5 w-28 rounded-lg p-3 uppercase text-white font-semibold hover:opacity-80 disabled:opacity-50"
-            onClick={handleSignOutClick}
-          >
-            Sign out
-          </button>
+      {/* User Profile Section */}
+      <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+        <div className="flex items-center justify-center">
+          <input
+            type="file"
+            ref={fileRef}
+            hidden
+            accept="image/*"
+            onChange={handleImageChange}
+          />
+          <img
+            onClick={() => fileRef.current.click()}
+            src={selectedImage || `http://localhost:5000/${user.image}`}
+            alt="profile"
+            className="rounded-full h-32 w-32 object-cover cursor-pointer"
+          />
         </div>
-      </form>
+        <div className="text-center mt-5">
+          <h2 className="text-xl font-semibold">{user.name}</h2>
+          <p className="text-gray-600">{user.role}</p>
+        </div>
+        <div className="mt-5">
+          <input
+            type="text"
+            placeholder="Fullname"
+            className="border p-3 mt-3 w-full rounded-lg focus:outline-none"
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            className="border p-3 mt-3 w-full rounded-lg focus:outline-none"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="border p-3 mt-3 w-full rounded-lg focus:outline-none"
+          />
+          <div className="flex justify-between mt-5">
+            <button className="bg-slate-700 w-24 rounded-lg p-3 uppercase text-white font-semibold hover:opacity-95 disabled:opacity-80">
+              Update
+            </button>
+            <button
+              className="bg-red-700 w-28 rounded-lg p-3 uppercase text-white font-semibold hover:opacity-80 disabled:opacity-50"
+              onClick={handleSignOutClick}
+            >
+              Sign out
+            </button>
+          </div>
+        </div>
+      </div>
 
+      {/* Booking Information Section */}
+      <div className="bg-white shadow-md rounded-lg p-6">
+        <h2 className="text-2xl font-semibold mb-4">My Bookings</h2>
+        {bookings ? (
+          <table className="min-w-full bg-white border">
+            <thead>
+              <tr className="w-full bg-gray-200">
+                <th className="py-2 px-4 border-b-2 text-left">Name</th>
+                <th className="py-2 px-4 border-b-2 text-left">Address</th>
+                <th className="py-2 px-4 border-b-2 text-left">Phone</th>
+                <th className="py-2 px-4 border-b-2 text-left">Room ID</th>
+              </tr>
+            </thead>
+            <tbody>
+              {bookings.map((booking, index) => (
+                <tr key={index} className="border-t">
+                  <td className="py-2 px-4">{booking.name}</td>
+                  <td className="py-2 px-4">{booking.address}</td>
+                  <td className="py-2 px-4">{booking.phone}</td>
+                  <td className="py-2 px-4 cursor-pointer underline text-blue-600">
+                    <Link to={`/property/${booking.roomId._id}`}>
+                      {booking.roomId._id}
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className="text-gray-500">No bookings found.</p>
+        )}
+      </div>
+
+      {/* Sign Out Confirmation Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">

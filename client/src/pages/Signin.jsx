@@ -58,6 +58,7 @@ const Signin = () => {
         location: data.location,
         token: data.token,
         role: data.role,
+        image: data.image,
       };
       localStorage.setItem("user", JSON.stringify(StoreToLocal));
       navigate("/");

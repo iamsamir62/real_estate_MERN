@@ -4,14 +4,14 @@ import { BiBed, BiBath, BiArea } from "react-icons/bi";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Audio, Blocks } from "react-loader-spinner";
-import {Formik,Form,Field,ErrorMessage} from 'formik'
-import * as yup from 'yup'
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as yup from "yup";
 
-const schema =yup.object().shape({
-  name:yup.string().required('this field is required'),
-  phone:yup.number().required('this field is required'),
-  address:yup.string().required('this field is required'),
-})
+const schema = yup.object().shape({
+  name: yup.string().required("this field is required"),
+  phone: yup.number().required("this field is required"),
+  address: yup.string().required("this field is required"),
+});
 const PropertyDetails = () => {
   const { id } = useParams();
   const [house, setHouse] = useState(null);
@@ -24,6 +24,7 @@ const PropertyDetails = () => {
     phone: "",
     address: "",
   });
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const location = useLocation();
   useEffect(() => {
@@ -73,11 +74,10 @@ const PropertyDetails = () => {
   };
   console.log(house);
 
-  const handleSubmit = async (e,resetForm) => {
-
+  const handleSubmit = async (e, resetForm) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/room/booking/${house._id}`,
+        `http://localhost:5000/room/booking/${house._id}/${user.id}`,
         {
           method: "POST",
           headers: {
@@ -94,7 +94,7 @@ const PropertyDetails = () => {
       const result = await response.json();
       console.log("Booking successful:", result);
       setIsBookingModalOpen(false);
-      resetForm()
+      resetForm();
       toast("Booking Successful !!", {
         position: "top-center",
         autoClose: 5000,
@@ -145,14 +145,16 @@ const PropertyDetails = () => {
     <div className="bg-white flex flex-col gap-20">
       {console.log(house, "dsdd")}
       <div className="h-96 bg-red-500 relative">
-  <img
-    src={`https://images.unsplash.com/photo-1559841644-08984562005a?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
-    className="h-full w-full object-cover object-bottom"
-  />
-  <div className="absolute inset-0 flex items-center justify-center">
-    <h1 className="text-white text-5xl font-bold">Room <span className="text-red-600">Details</span></h1>
-  </div>
-</div>
+        <img
+          src={`https://images.unsplash.com/photo-1559841644-08984562005a?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
+          className="h-full w-full object-cover object-bottom"
+        />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <h1 className="text-white text-5xl font-bold">
+            Room <span className="text-red-600">Details</span>
+          </h1>
+        </div>
+      </div>
 
       <div className="  w-11/12 mx-auto bg-white rounded-lg py-14  grid grid-cols-1 sm:grid-cols-2 gap-10">
         <div className="grid sm:grid-cols-2 grid-cols-1 gap-4 mb-8">
@@ -264,80 +266,92 @@ const PropertyDetails = () => {
 
         {isBookingModalOpen && (
           <Formik
-          initialValues={{
-            name: "",
-            phone: "",
-            address: "",
-          }}
-          validationSchema={schema}
-          onSubmit={(values,{resetForm})=>{
-            console.log(values)
-            handleSubmit(values,resetForm)
-          }}
+            initialValues={{
+              name: "",
+              phone: "",
+              address: "",
+            }}
+            validationSchema={schema}
+            onSubmit={(values, { resetForm }) => {
+              console.log(values);
+              handleSubmit(values, resetForm);
+            }}
           >
-{({handleSubmit})=>{
-  return(
-    <Form onSubmit={handleSubmit} className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-    <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-      <h2 className="text-2xl font-bold mb-4">Booking Details</h2>
-      <div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2">
-            Full Name
-          </label>
-          <Field
-            type="text"
-            className="w-full p-2 border border-gray-300 rounded-md"
-            name="name"
-          />
-          <ErrorMessage className='text-red-500 first-letter:capitalize animate-bounce' component={'div'} name="name" />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2">
-            Phone
-          </label>
-          <Field
-            type="number"
-            className="w-full p-2 border border-gray-300 rounded-md"
-            name="phone"
-          />
-          <ErrorMessage className='text-red-500 first-letter:capitalize animate-bounce' component={'div'} name="phone" />
-
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2">
-            Address
-          </label>
-          <Field
-            type="text"
-            className="w-full p-2 border border-gray-300 rounded-md"
-            name="address"
-          />
-          <ErrorMessage className='text-red-500 first-letter:capitalize animate-bounce' component={'div'} name="address" />
-
-        </div>
-        <div className="flex justify-between">
-          <button
-            type="button"
-            className="bg-gray-400 text-white px-4 py-2 rounded-md"
-            onClick={closeBookingModal}
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded-md"
-          >
-            Submit
-          </button>
-        </div>
-      </div>
-    </div>
-  </Form>
-  )
-}}
+            {({ handleSubmit }) => {
+              return (
+                <Form
+                  onSubmit={handleSubmit}
+                  className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+                >
+                  <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+                    <h2 className="text-2xl font-bold mb-4">Booking Details</h2>
+                    <div>
+                      <div className="mb-4">
+                        <label className="block text-gray-700 font-semibold mb-2">
+                          Full Name
+                        </label>
+                        <Field
+                          type="text"
+                          className="w-full p-2 border border-gray-300 rounded-md"
+                          name="name"
+                        />
+                        <ErrorMessage
+                          className="text-red-500 first-letter:capitalize animate-bounce"
+                          component={"div"}
+                          name="name"
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <label className="block text-gray-700 font-semibold mb-2">
+                          Phone
+                        </label>
+                        <Field
+                          type="number"
+                          className="w-full p-2 border border-gray-300 rounded-md"
+                          name="phone"
+                        />
+                        <ErrorMessage
+                          className="text-red-500 first-letter:capitalize animate-bounce"
+                          component={"div"}
+                          name="phone"
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <label className="block text-gray-700 font-semibold mb-2">
+                          Address
+                        </label>
+                        <Field
+                          type="text"
+                          className="w-full p-2 border border-gray-300 rounded-md"
+                          name="address"
+                        />
+                        <ErrorMessage
+                          className="text-red-500 first-letter:capitalize animate-bounce"
+                          component={"div"}
+                          name="address"
+                        />
+                      </div>
+                      <div className="flex justify-between">
+                        <button
+                          type="button"
+                          className="bg-gray-400 text-white px-4 py-2 rounded-md"
+                          onClick={closeBookingModal}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </Form>
+              );
+            }}
           </Formik>
-    
         )}
       </div>
     </div>

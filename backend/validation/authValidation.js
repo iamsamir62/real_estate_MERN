@@ -4,7 +4,6 @@ const joi = require('joi');
 const registerValidationSchema = joi.object({
     name: joi.string().required(),
     email: joi.string().email().required(),
-    image: joi.string().required(),
     latitude: joi.string().required(),
     longitude: joi.string().required(),
     password: joi.string().pattern(new RegExp("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$")).required()

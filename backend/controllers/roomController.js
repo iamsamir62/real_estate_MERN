@@ -68,10 +68,10 @@ const addRoom = asyncHandler(async (req, res) => {
         }
 
         const { Owner, description, price, Address, propertyType, bedrooms, latitude, longitude, bathrooms } = req.body;
-        const photos = req.files; 
+        const photos = req.files;
 
-        const images = photos && photos.map(file => file.path); 
-       console.log(images)
+        const images = photos && photos.map(file => file.path);
+        console.log(images)
 
         const room = await Room.create({
             ownerName: Owner,
@@ -80,14 +80,14 @@ const addRoom = asyncHandler(async (req, res) => {
                 latitude: latitude,
                 longitude: longitude
             },
-            images, 
+            images,
             description,
             price,
             type: propertyType,
             bedrooms: propertyType === 'Flat' ? bedrooms : undefined,
             bathrooms: propertyType === 'Flat' ? bathrooms : undefined,
         });
-console.log(room)
+        console.log(room)
         res.status(201).json({
             success: true,
             message: 'Room added successfully!',
@@ -100,10 +100,10 @@ console.log(room)
 
 
 const bookingRoom = asyncHandler(async (req, res) => {
-    
+
     const { name, phone, address } = req.body;
-    console.log(req.body)
-    const { houseid } = req.params;
+    const { houseid, userid } = req.params;
+    console.log(userid)
 
     if (!houseid) {
         return res.status(400).json({ message: "House ID is required" });
@@ -113,6 +113,7 @@ const bookingRoom = asyncHandler(async (req, res) => {
         const book = await Booking.create({
             name,
             phone,
+            userId: userid,
             roomId: houseid,
             address
         });
@@ -160,15 +161,25 @@ const getIndividualRoomData = asyncHandler(async (req, res) => {
 
     res.status(200).json(successResponse('Room found!', room));
 });
+const getIndividualBookingData = asyncHandler(async (req, res) => {
+    const { userid } = req.params;
+    const bookings = await Booking.findOne({ userId: userid }).populate('roomId');
+
+    if (!bookings) {
+        return res.status(404).json({ success: false, message: 'Booking not found' });
+    }
+
+    res.status(200).json(successResponse('Bookings found!', [bookings]));
+});
 
 const deleteBooking = async (req, res) => {
     const { id } = req.params;
     try {
-        const bookedRoom = await Booking.findById(id); 
-        const booking = await Booking.findByIdAndDelete(id); 
+        const bookedRoom = await Booking.findById(id);
+        const booking = await Booking.findByIdAndDelete(id);
 
         if (!booking) {
-            return res.status(404).json({ success: false, message: 'Booking not found' });
+            return res.status(400).json({ success: false, message: 'Booking not found' });
         }
 
         const room = await Room.findOne({ _id: bookedRoom.roomId });
@@ -193,13 +204,13 @@ const deleteBooking = async (req, res) => {
 const deleteRoom = async (req, res) => {
     const { id } = req.params;
     try {
-        const room = await Room.findByIdAndDelete(id); 
+        const room = await Room.findByIdAndDelete(id);
 
         if (!room) {
             return res.status(404).json({ success: false, message: 'Room not found' });
         }
 
-        
+
 
         res.status(200).json({ success: true, message: 'Room deleted successfully' });
     } catch (error) {
@@ -217,5 +228,5 @@ module.exports = {
     getAllBookedUser,
     getIndividualRoomData,
     deleteBooking,
-    deleteRoom
+    deleteRoom, getIndividualBookingData
 };
