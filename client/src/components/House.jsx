@@ -54,18 +54,18 @@ const House = ({ house }) => {
               </div>
               <div>{bathrooms}</div>
             </div>
-            <div className="flex items-center text-slate-500 gap-1">
+            {/* <div className="flex items-center text-slate-500 gap-1">
               <div className="text-[20px]">
                 <BiArea />
               </div>
               <div>{surface}</div>
-            </div>
+            </div> */}
           </div>
         )}
       </div>
 
       <div className="text-lg font-semibold text-violet-600 mb-4 flex-shrink-0">
-        ${price} 
+        Rs {price} 
       </div>
     </div>
   );

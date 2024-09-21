@@ -1,6 +1,6 @@
 import React from "react";
 import Search from "../components/Search";
-import videos from '../../public/video1.mp4'
+import videos from '../../public/videos.mp4'
 const Banner = () => {
   return (
     <section className="h-[600px] w-full flex felx-col justify-center  relative overflow-clip  mx-auto">
