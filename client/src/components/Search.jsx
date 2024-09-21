@@ -18,7 +18,7 @@ const Search = () => {
         </div>
         <div className="w-full col-span-2 ">
 
-      <PriceDropDown />
+      {/* <PriceDropDown /> */}
         </div>
 
       <button

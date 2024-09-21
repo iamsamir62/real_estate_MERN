@@ -5,12 +5,10 @@ import { toast } from "react-toastify";
 
 const SignUp = () => {
   const [location, setLocation] = useState({ latitude: null, longitude: null });
-  const [isLocationValid, setIsLocationValid] = useState(false);
   const {
     register,
     handleSubmit,
     setValue,
-    trigger,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -18,103 +16,61 @@ const SignUp = () => {
       email: "",
       password: "",
       file: null,
-      location: "",
     },
   });
   const navigate = useNavigate();
+
   const handleInputChange = (e) => {
-    const { id, value, files } = e.target;
-    setValue(id, files ? files[0] : value);
+    const { id, files, value } = e.target;
+    setValue(id, files ? files[0] : value); // Handle file input
   };
 
   const onSubmit = async (data) => {
-    console.log("Form Data:", data);
-    console.log("User location:", location);
-
-    const userData = {
-      ...data,
-      location,
-    };
-
-    await Data(userData);
-  };
-
-  const Data = async (userData) => {
-    console.log(userData);
-
-    const formData = new FormData();
-    formData.append("name", userData.name);
-    formData.append("email", userData.email);
-
-    if (userData.file) {
-      formData.append("image", userData.file);
+    const formData = new FormData(); // Use FormData to handle file upload
+    formData.append("name", data.name);
+    formData.append("email", data.email);
+    formData.append("password", data.password);
+    if (data.file) {
+      formData.append("image", data.file); // Add file to FormData
     }
 
-    formData.append("password", userData.password);
-    formData.append("latitude", userData.location.latitude);
-    formData.append("longitude", userData.location.longitude);
+    // Add location data (optional)
+    formData.append("latitude", location.latitude);
+    formData.append("longitude", location.longitude);
 
     try {
       const response = await fetch("http://localhost:5000/auth/register", {
         method: "POST",
-        body: formData,
+        body: formData, // Send form data
       });
 
       const result = await response.json();
 
       if (!response.ok) {
-        const errorMessage = result.message || "An unexpected error occurred";
-        console.error("Error response body:", result);
-        toast.error(`Error: ${errorMessage}`, {
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-        return;
+        throw new Error(result.message || "An unexpected error occurred");
       }
 
-      console.log("Response:", result);
-
-      const { data } = result;
-      const StoreToLocal = {
-        id: data._id,
-        name: data.name,
-        email: data.email,
-        location: data.location,
-        role: data.role,
-      };
-      toast.success("Signup Successful !!", {
+      toast.success("Signup Successful!", {
         position: "top-center",
         autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
         theme: "light",
-        style: {
-          backgroundColor: "#4caf50",
-          color: "white",
-        },
       });
 
-      localStorage.setItem("user", JSON.stringify(StoreToLocal));
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          id: result.data._id,
+          name: result.data.name,
+          email: result.data.email,
+          location: result.data.location,
+          role: result.data.role,
+        })
+      );
       navigate("/signin");
     } catch (error) {
-      console.error("Error:", error);
-      toast.error("An unexpected error occurred. Please try again.", {
+      toast.error(error.message || "An error occurred during sign-up.", {
         position: "top-center",
         autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
         theme: "dark",
       });
     }
@@ -126,6 +82,7 @@ const SignUp = () => {
       <form
         className="rounded-lg flex flex-col items-center gap-4"
         onSubmit={handleSubmit(onSubmit)}
+        encType="multipart/form-data" // not mandatory in React, but makes the form intention clearer
       >
         <div className="w-full">
           <input
@@ -175,10 +132,11 @@ const SignUp = () => {
 
         <div className="w-full">
           <input
+            id="file"
             type="file"
             className="border p-3 rounded-lg w-full"
             {...register("file")}
-            onChange={handleInputChange}
+            onChange={handleInputChange} // File handling onChange
           />
         </div>
 
