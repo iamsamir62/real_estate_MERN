@@ -6,6 +6,7 @@ const Profile = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const fileRef = useRef(null);
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -51,6 +52,8 @@ const Profile = () => {
           alt="profile"
           className="rounded-full h-24 w-24 object-cover cursor-pointer self-center"
         />
+       Name <h2>{user.name}</h2>
+       Role <h2>{user.role}</h2>
         <input
           type="text"
           placeholder="Fullname"
