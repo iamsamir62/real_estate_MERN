@@ -163,13 +163,13 @@ const getIndividualRoomData = asyncHandler(async (req, res) => {
 });
 const getIndividualBookingData = asyncHandler(async (req, res) => {
     const { userid } = req.params;
-    const bookings = await Booking.findOne({ userId: userid }).populate('roomId');
+    const bookings = await Booking.find({ userId: userid }).populate('roomId');
 
     if (!bookings) {
         return res.status(404).json({ success: false, message: 'Booking not found' });
     }
 
-    res.status(200).json(successResponse('Bookings found!', [bookings]));
+    res.status(200).json(successResponse('Bookings found!', bookings));
 });
 
 const deleteBooking = async (req, res) => {
