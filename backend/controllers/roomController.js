@@ -220,6 +220,27 @@ const deleteRoom = async (req, res) => {
 };
 
 
+const searchRooms = async (req, res) => {
+    const query = req.query.address;
+
+    try {
+        const rooms = await Room.find({
+            address: new RegExp(query, 'i')
+        }).sort({ address: 1 });
+
+        if (rooms.length > 0) {
+
+            res.json({ data: rooms });
+        } else {
+
+            res.json({ data: [] });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
 module.exports = {
     getAllRoomsData,
     getNearbyRooms,
@@ -228,5 +249,5 @@ module.exports = {
     getAllBookedUser,
     getIndividualRoomData,
     deleteBooking,
-    deleteRoom, getIndividualBookingData
+    deleteRoom, getIndividualBookingData, searchRooms
 };

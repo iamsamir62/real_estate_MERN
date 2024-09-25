@@ -7,16 +7,19 @@ import {
   Box,
   CircularProgress,
   Grid,
+  Input,
 } from "@mui/material";
 import { FaLaptopHouse } from "react-icons/fa";
 import { RiGpsLine } from "react-icons/ri";
 import HouseContext from "../context/HouseContext";
+import { toast } from "react-toastify";
 
 const LocationDropDOwn = () => {
   const { locations, houses, setHouses } = useContext(HouseContext);
   const [selectedLocation, setSelectedLocation] = useState("");
   const [loading, setLoading] = useState(false);
   const [sortOrder, setSortOrder] = useState("");
+  const [search, setSearch] = useState('');
 
   const handleUseCurrentLocation = () => {
     setLoading(true);
@@ -84,9 +87,44 @@ const LocationDropDOwn = () => {
     }
   };
 
+  const handleSearch = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/room/searchrooms?address=${search}`
+      );
+      const result = await response.json();
+      if (response.ok) {
+        const searched = result.data;
+        if (searched.length > 0) {
+          setSearch('');
+          setHouses(searched);
+        } else {
+          toast("No data found !!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
+      } else {
+        console.error(
+          "Error searching rooms:",
+          result.message || "Failed to fetch rooms."
+        );
+      }
+    } catch (error) {
+      console.error("Error searching rooms:", error);
+    }
+  };
+
+
   return (
     <Grid container spacing={2}>
-      <Grid item xs={6}>
+      <Grid item xs={4}>
         <Box sx={{ minWidth: 120 }}>
           <FormControl fullWidth>
             <InputLabel id="location-select-label">Select Location</InputLabel>
@@ -112,7 +150,7 @@ const LocationDropDOwn = () => {
         </Box>
       </Grid>
 
-      <Grid item xs={6}>
+      <Grid item xs={4}>
         <Box sx={{ minWidth: 120 }}>
           <FormControl fullWidth>
             <InputLabel id="sort-select-label">Sort by Price</InputLabel>
@@ -127,6 +165,25 @@ const LocationDropDOwn = () => {
               <MenuItem value="high-to-low">High to Low</MenuItem>
             </Select>
           </FormControl>
+        </Box>
+      </Grid>
+      <Grid item xs={4}>
+        <Box sx={{ minWidth: 120, display: "flex" }}>
+          <FormControl fullWidth>
+            <InputLabel id="sort-select-label">Search by Location</InputLabel>
+            <Input
+              labelId="search-by-location"
+              id="search"
+              value={search}
+              label="Search"
+              onChange={(e) => setSearch(e.target.value)}
+            />
+
+          </FormControl>
+          <button style={{ backgroundColor: 'lightblue', color: 'black', borderRadius: '10px', padding: '1px 15px', fontSize: '16px', marginLeft: '10px' }}
+            onClick={handleSearch}>Search</button>
+          <button style={{ backgroundColor: 'red', color: 'black', borderRadius: '10px', padding: '1px 15px', fontSize: '16px', marginLeft: '10px' }}
+            onClick={fetchHouses}>Reset</button>
         </Box>
       </Grid>
 
