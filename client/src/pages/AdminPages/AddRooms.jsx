@@ -62,7 +62,7 @@ const AddRooms = () => {
 
       const result = await response.json();
       if (result) {
-        toast('Room added Successfully !!', {
+        toast("Room added Successfully !!", {
           position: "top-center",
           autoClose: 5000,
           hideProgressBar: false,
@@ -73,9 +73,8 @@ const AddRooms = () => {
           theme: "light",
         });
 
-        
-        reset(); 
-        setPhotos([]); 
+        reset();
+        setPhotos([]);
       }
 
       console.log("Response:", result);
@@ -204,7 +203,7 @@ const AddRooms = () => {
             <input
               type="number"
               step="0.0001"
-  min="0"
+              min="0"
               id="latitude"
               {...register("latitude", { required: "Latitude is required" })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
@@ -222,8 +221,8 @@ const AddRooms = () => {
             </label>
             <input
               type="number"
-             step="0.0001"
-  min="0"
+              step="0.0001"
+              min="0"
               id="longitude"
               {...register("longitude", { required: "Longitude is required" })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
@@ -332,7 +331,7 @@ const AddRooms = () => {
               </div>
             )}
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-end pb-10">
             <button
               type="submit"
               className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200"

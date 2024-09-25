@@ -197,7 +197,7 @@ const PropertyDetails = () => {
           </div>
         )}
 
-        <div className=" px-10 flex  flex-col gap-5 ">
+        <div className=" px-10 flex  flex-col gap-5 shadow-lg ">
           <div className="flex flex-col gap-3">
             <h1 className="text-xl font-serif text-gray-600">Description:</h1>
             <h2 className="">{house.description}</h2>
@@ -222,12 +222,12 @@ const PropertyDetails = () => {
                   </div>
                   <div>{house.bathrooms}</div>
                 </div>
-                <div className="flex items-center text-slate-500 gap-1">
+                {/* <div className="flex items-center text-slate-500 gap-1">
                   <div className="text-[20px]">
                     <BiArea />
                   </div>
                   <div>{house.surface}</div>
-                </div>
+                </div> */}
               </div>
             )}
             <div>
@@ -246,7 +246,7 @@ const PropertyDetails = () => {
               <div className="flex items-center gap-5 mt-5">
                 <h1 className="text-xl font-serif text-gray-600">Price:</h1>
                 <div className="text-xl font-semibold  rounded-full  inline-block ">
-                  Rs{house.price} /month
+                  Rs {house.price} /month
                 </div>
               </div>
             </div>

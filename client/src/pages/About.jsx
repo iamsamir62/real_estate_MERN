@@ -58,9 +58,9 @@ const About = () => {
  
   ];
   return (
-    <div className="py-32 ">
-      <div className="grid grid-cols-2 gap-10 w-11/12 mx-auto ">
-        <div className="flex flex-col gap-9 ">
+    <div className=" ">
+      <div className="grid grid-cols-2 gap-10 w-11/12 mx-auto  ">
+        <div className="flex flex-col gap-9 my-40 ">
         <div className="flex flex-col gap-2">
         <h2 className="font-semibold text-customgreen text-2xl text-red-500 ">
             About Us
@@ -83,7 +83,7 @@ const About = () => {
             preference and budget.
           </p>
         </div>
-        <div className="grid grid-cols-2 gap-5">
+        <div className="grid grid-cols-2 gap-5 my-40">
           <img
             src={`https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
             alt=""
