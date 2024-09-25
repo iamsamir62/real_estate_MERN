@@ -17,6 +17,7 @@ import ViewRooms from "./pages/AdminPages/ViewRooms.jsx";
 import PrivateComponent from "./pages/PrivateComponent.jsx";
 import { ToastContainer } from "react-toastify";
 import Contact from "./pages/Contact.jsx";
+import Team from "./components/Team.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -53,16 +54,22 @@ function App() {
               <About />
             </UserLayout>
           }
-          
         />
-          <Route
+        <Route
+          path="/team"
+          element={
+            <UserLayout>
+              <Team />
+            </UserLayout>
+          }
+        />
+        <Route
           path="/contact"
           element={
             <UserLayout>
               <Contact />
             </UserLayout>
           }
-          
         />
         <Route element={<PrivateComponent />}>
           <Route
@@ -116,9 +123,8 @@ function App() {
             </AdminLayout>
           }
         />
-
       </Routes>
-        <ToastContainer />
+      <ToastContainer />
     </BrowserRouter>
   );
 }

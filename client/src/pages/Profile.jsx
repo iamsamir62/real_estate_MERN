@@ -56,7 +56,7 @@ const Profile = () => {
 
   return (
     <div className="p-3 max-w-3xl mx-auto">
-      <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
+      <h1 className="text-3xl font-semibold text-center my-20">Profile</h1>
 
       {/* User Profile Section */}
       <div className="bg-white shadow-md rounded-lg p-6 mb-6">
@@ -80,7 +80,7 @@ const Profile = () => {
           <p className="text-gray-600">{user.role}</p>
         </div>
         <div className="mt-5">
-          <input
+          {/* <input
             type="text"
             placeholder="Fullname"
             className="border p-3 mt-3 w-full rounded-lg focus:outline-none"
@@ -94,11 +94,11 @@ const Profile = () => {
             type="password"
             placeholder="Password"
             className="border p-3 mt-3 w-full rounded-lg focus:outline-none"
-          />
+          /> */}
           <div className="flex justify-between mt-5">
-            <button className="bg-slate-700 w-24 rounded-lg p-3 uppercase text-white font-semibold hover:opacity-95 disabled:opacity-80">
+            {/* <button className="bg-slate-700 w-24 rounded-lg p-3 uppercase text-white font-semibold hover:opacity-95 disabled:opacity-80">
               Update
-            </button>
+            </button> */}
             <button
               className="bg-red-700 w-28 rounded-lg p-3 uppercase text-white font-semibold hover:opacity-80 disabled:opacity-50"
               onClick={handleSignOutClick}

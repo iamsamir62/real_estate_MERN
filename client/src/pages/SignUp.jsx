@@ -122,7 +122,7 @@ const SignUp = () => {
 
   return (
     <div className="p-3 max-w-lg mx-auto">
-      <h1 className="text-3xl text-center font-semibold my-7">Sign Up</h1>
+      <h1 className="text-3xl text-center font-semibold my-20">Sign Up</h1>
       <form
         className="rounded-lg flex flex-col items-center gap-4"
         onSubmit={handleSubmit(onSubmit)}
