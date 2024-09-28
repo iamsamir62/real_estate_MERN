@@ -58,53 +58,61 @@ const About = () => {
  
   ];
   return (
-    <div className=" ">
-      <div className="grid grid-cols-2 gap-10 w-11/12 mx-auto  ">
-        <div className="flex flex-col gap-9 my-40 ">
+    <div className="">
+    {/* Container for About Us Section */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-11/12 mx-auto">
+      {/* Left Section - About Us Content */}
+      <div className="flex flex-col gap-9 my-20 md:my-40">
         <div className="flex flex-col gap-2">
-        <h2 className="font-semibold text-customgreen text-2xl text-red-500 ">
+          <h2 className="font-semibold text-customgreen text-2xl text-red-500">
             About Us
           </h2>
-          <h1 className="text-5xl font-semibold">Online Room Rental</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold">
+            Online Room Rental
+          </h1>
         </div>
-          <p className="text-left text-gray-600">
-            RoomRental is a leading platform dedicated to providing the best
-            room and flat rental options. We focus on making your stay
-            comfortable and convenient, helping you find the perfect
-            accommodation that fits your needs. With access to properties in
-            numerous locations, we ensure every traveler finds their ideal home
-            away from home.
-          </p>
-          <p className="text-left
-           text-gray-600">
-            Whether you're looking for a cozy room or a spacious flat,
-            RoomRental simplifies the booking process. We guarantee a seamless
-            experience, offering a wide range of choices to suit every
-            preference and budget.
-          </p>
-        </div>
-        <div className="grid grid-cols-2 gap-5 my-40">
-          <img
-            src={`https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
-            alt=""
-          />
-          <img
-            src={`https://images.unsplash.com/photo-1505577058444-a3dab90d4253?q=80&w=1870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
-            alt=""
-            className="mt-20"
-          />{" "}
-        </div>
+        <p className="text-left text-gray-600">
+          RoomRental is a leading platform dedicated to providing the best room
+          and flat rental options. We focus on making your stay comfortable and
+          convenient, helping you find the perfect accommodation that fits your
+          needs. With access to properties in numerous locations, we ensure every
+          traveler finds their ideal home away from home.
+        </p>
+        <p className="text-left text-gray-600">
+          Whether you're looking for a cozy room or a spacious flat, RoomRental
+          simplifies the booking process. We guarantee a seamless experience,
+          offering a wide range of choices to suit every preference and budget.
+        </p>
       </div>
-      <div className="w-11/12 mx-auto">
-        <div className="text-center pb-20">
-          <h2 className="font-semibold text-customgreen text-2xl text-red-500 ">
-            Our Gallery
-          </h2>
-          <h1 className="text-4xl font-semibold">Discover our work</h1>
-        </div>
-
-       
-      <Masonry columns={3} spacing={2}>
+  
+      {/* Right Section - Images */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 my-20 md:my-40">
+        <img
+          src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt=""
+          className=""
+        />
+        <img
+          src="https://images.unsplash.com/photo-1505577058444-a3dab90d4253?q=80&w=1870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt=""
+          className="sm:mt-10 md:mt-20"
+        />
+      </div>
+    </div>
+  
+    {/* Gallery Section */}
+    <div className="w-11/12 mx-auto">
+      <div className="text-center pb-10 md:pb-20">
+        <h2 className="font-semibold text-customgreen text-2xl text-red-500">
+          Our Gallery
+        </h2>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold">
+          Discover our work
+        </h1>
+      </div>
+  
+      {/* Masonry Gallery */}
+      <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={2}>
         {itemData.map((item, index) => (
           <div key={index}>
             <img
@@ -115,41 +123,16 @@ const About = () => {
               style={{
                 borderBottomLeftRadius: 4,
                 borderBottomRightRadius: 4,
-                display: 'block',
-                width: '100%',
+                display: "block",
+                width: "100%",
               }}
             />
           </div>
         ))}
       </Masonry>
-        {/* <div className="grid grid-cols-2 gap-10 mt-14">
-          <div className="grid gap-4">
-            <div className="">
-              <img
-                src={`https://images.unsplash.com/photo-1554995207-c18c203602cb?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGxpdmluZyUyMHJvb218ZW58MHx8MHx8fDA%3D`}
-                alt="" className="w-full"
-              />
-            </div>
-            <div className="col-span-2 grid  grid-cols-3  gap-5">
-              <img
-                src={`https://plus.unsplash.com/premium_photo-1661962952618-031d218dd040?q=80&w=1796&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
-                alt=""  className="col-span-2 w-full"
-              />
-              <img
-                src={`https://images.unsplash.com/photo-1564078516393-cf04bd966897?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
-                alt=""  className="w-full"
-              />
-            </div>
-          </div>
-          <div>
-            <img
-              src={`https://images.unsplash.com/photo-1489171078254-c3365d6e359f?q=80&w=1931&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
-              alt=""  className="w-full "
-            />
-          </div>
-        </div> */}
-      </div>
     </div>
+  </div>
+  
   );
 };
 

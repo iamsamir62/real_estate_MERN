@@ -19,7 +19,7 @@ const LocationDropDOwn = () => {
   const [selectedLocation, setSelectedLocation] = useState("");
   const [loading, setLoading] = useState(false);
   const [sortOrder, setSortOrder] = useState("");
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
 
   const handleUseCurrentLocation = () => {
     setLoading(true);
@@ -67,7 +67,10 @@ const LocationDropDOwn = () => {
         const nearby = result.data;
         setHouses(nearby);
       } else {
-        console.error("Error fetching nearby rooms:", result.message || "Failed to fetch rooms.");
+        console.error(
+          "Error fetching nearby rooms:",
+          result.message || "Failed to fetch rooms."
+        );
       }
     } catch (error) {
       console.error("Error fetching nearby rooms:", error);
@@ -96,7 +99,7 @@ const LocationDropDOwn = () => {
       if (response.ok) {
         const searched = result.data;
         if (searched.length > 0) {
-          setSearch('');
+          setSearch("");
           setHouses(searched);
         } else {
           toast("No data found !!", {
@@ -121,74 +124,83 @@ const LocationDropDOwn = () => {
     }
   };
 
-
   return (
     <Grid container spacing={2}>
-      <Grid item xs={4}>
-        <Box sx={{ minWidth: 120 }}>
-          <FormControl fullWidth>
-            <InputLabel id="location-select-label">Select Location</InputLabel>
-            <Select
-              labelId="location-select-label"
-              id="location-select"
-              value={selectedLocation}
-              label="Select Location"
-              onChange={(e) => setSelectedLocation(e.target.value)}
+    <Grid item xs={12} sm={6} md={4}>
+      <Box sx={{ minWidth: 120 }}>
+        <FormControl fullWidth>
+          <InputLabel id="location-select-label">Select Location</InputLabel>
+          <Select
+            labelId="location-select-label"
+            id="location-select"
+            value={selectedLocation}
+            label="Select Location"
+            onChange={(e) => setSelectedLocation(e.target.value)}
+          >
+            <MenuItem
+              value="use-current-location"
+              onClick={handleUseCurrentLocation}
             >
-              <MenuItem
-                value="use-current-location"
-                onClick={handleUseCurrentLocation}
-              >
-                <RiGpsLine className="mr-2" /> Use Current Location
-              </MenuItem>
-              <MenuItem value="all-rooms" onClick={fetchHouses}>
-                <FaLaptopHouse className="mr-2" /> All Rooms
-              </MenuItem>
-              {/* Add static locations if needed */}
-            </Select>
-          </FormControl>
-        </Box>
-      </Grid>
-
-      <Grid item xs={4}>
-        <Box sx={{ minWidth: 120 }}>
-          <FormControl fullWidth>
-            <InputLabel id="sort-select-label">Sort by Price</InputLabel>
-            <Select
-              labelId="sort-select-label"
-              id="sort-select"
-              value={sortOrder}
-              label="Sort by Price"
-              onChange={handleSortChange}
-            >
-              <MenuItem value="low-to-high">Low to High</MenuItem>
-              <MenuItem value="high-to-low">High to Low</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
-      </Grid>
-      <Grid item xs={4}>
-        <Box sx={{ minWidth: 120, display: "flex" }}>
-          <FormControl fullWidth>
-            <InputLabel id="sort-select-label">Search by Location</InputLabel>
-            <Input
-              labelId="search-by-location"
-              id="search"
-              value={search}
-              label="Search"
-              onChange={(e) => setSearch(e.target.value)}
-            />
-
-          </FormControl>
-          <button style={{ backgroundColor: 'lightblue', color: 'black', borderRadius: '10px', padding: '1px 15px', fontSize: '16px', marginLeft: '10px' }}
-            onClick={handleSearch}>Search</button>
-          <button style={{ backgroundColor: 'red', color: 'black', borderRadius: '10px', padding: '1px 15px', fontSize: '16px', marginLeft: '10px' }}
-            onClick={fetchHouses}>Reset</button>
-        </Box>
-      </Grid>
-
-      {loading && <CircularProgress />}
+              <RiGpsLine className="mr-2" /> Use Current Location
+            </MenuItem>
+            <MenuItem value="all-rooms" onClick={fetchHouses}>
+              <FaLaptopHouse className="mr-2" /> All Rooms
+            </MenuItem>
+            {/* Add static locations if needed */}
+          </Select>
+        </FormControl>
+      </Box>
     </Grid>
+  
+    <Grid item xs={12} sm={6} md={4}>
+      <Box sx={{ minWidth: 120 }}>
+        <FormControl fullWidth>
+          <InputLabel id="sort-select-label">Sort by Price</InputLabel>
+          <Select
+            labelId="sort-select-label"
+            id="sort-select"
+            value={sortOrder}
+            label="Sort by Price"
+            onChange={handleSortChange}
+          >
+            <MenuItem value="low-to-high">Low to High</MenuItem>
+            <MenuItem value="high-to-low">High to Low</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+    </Grid>
+  
+    <Grid item xs={12} md={4}>
+      <Box sx={{ minWidth: 120, display: "flex", flexDirection: { xs: "column", md: "row" } }}>
+        <FormControl fullWidth>
+          <InputLabel id="search-by-location-label">Search by Location</InputLabel>
+          <Input
+            id="search-by-location"
+            value={search}
+            label="Search"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </FormControl>
+        <Box sx={{ display: "flex", mt: { xs: 2, md: 0 }, ml: { md: 2 } }}>
+          <button
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg px-5 py-2 text-lg transition duration-300 ease-in-out"
+            onClick={handleSearch}
+          >
+            Search
+          </button>
+          <button
+            className="bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg px-5 py-2 text-lg transition duration-300 ease-in-out ml-3"
+            onClick={fetchHouses}
+          >
+            Reset
+          </button>
+        </Box>
+      </Box>
+    </Grid>
+  
+    {loading && <CircularProgress />}
+  </Grid>
+  
   );
 };
 

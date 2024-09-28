@@ -40,14 +40,14 @@ if(this.pageYOffset>300){
           
           </h1>
         </Link>
-        <form className="bg-slate-100 p-3 rounded-lg flex items-center opacity-80">
+        {/* <form className="bg-slate-100 p-3 rounded-lg flex items-center opacity-80">
           <input
             type="text"
             placeholder="Search..."
             className="bg-transparent focus:outline-none w-24 sm:w-64"
           />
           <FaSearch size={20} />
-        </form>
+        </form> */}
         <ul className="flex gap-7">
           <Link to="/home">
             <li className="hidden sm:inline text-slate-700 hover:underline font-semibold ">
@@ -56,6 +56,11 @@ if(this.pageYOffset>300){
           </Link>
           <Link to="/about">
               About Us
+            <li className="hidden sm:inline text-slate-700 hover:underline font-semibold ">
+            </li>
+          </Link>
+          <Link to="/team">
+             Team
             <li className="hidden sm:inline text-slate-700 hover:underline font-semibold ">
             </li>
           </Link>

@@ -10,7 +10,7 @@ const Search = () => {
 
   return (
     <div
-      className="px-4 py-4   w-7/12 
+      className="px-4 py-4   w-11/12 
      mx-auto mt-4 grid grid-cols-2  justify-between
       gap-4 relative shadow-lg bg-gray-100 rounded-lg border lg:items-center"
     >
